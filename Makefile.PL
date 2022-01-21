@@ -7,12 +7,12 @@ use warnings;
 use SPVM::Builder::Util;
 
 WriteMakefile(
-    NAME              => 'SPVM::Math',
-    VERSION_FROM      => 'lib/SPVM/Math.pm', # finds $VERSION
+    NAME              => 'SPVM::JSON',
+    VERSION_FROM      => 'lib/SPVM/JSON.pm', # finds $VERSION
     PREREQ_PM         => {}, # e.g., Module::Name => 1.1
     LICENSE           => 'perl_5',
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/SPVM/Math.pm', # retrieve abstract from module
+      (ABSTRACT_FROM  => 'lib/SPVM/JSON.pm', # retrieve abstract from module
        AUTHOR         => 'Yuki Kimoto<kimoto.yuki@gmail.com>') : ()),
     test => {TESTS => 't/*.t'},
     clean => {FILES => ".spvm_build"},
@@ -21,8 +21,8 @@ WriteMakefile(
         resources => {
             repository => {
                 type => 'git',
-                url  => 'https://github.com/yuki-kimoto/Perl-SPVM-Math.git',
-                web  => 'https://github.com/yuki-kimoto/Perl-SPVM-Math',
+                url  => 'https://github.com/yuki-kimoto/Perl-SPVM-JSON.git',
+                web  => 'https://github.com/yuki-kimoto/Perl-SPVM-JSON',
             },
         },
     },
@@ -37,10 +37,7 @@ sub MY::postamble {
   my $make_rule = '';
   
   # Native compile make rule
-  $make_rule .= SPVM::Builder::Util::create_make_rule_native('Math');
-
-  # Native compile make rule
-  $make_rule .= SPVM::Builder::Util::create_make_rule_precompile('Math');
+  $make_rule .= SPVM::Builder::Util::create_make_rule_precompile('JSON');
   
   return $make_rule;
 }

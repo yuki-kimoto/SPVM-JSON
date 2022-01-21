@@ -1,10 +1,10 @@
 class MyComplex {
   use Complex_2f;
   use Complex_2d;
-  use Math (complexf);
-  use Math (complex);
-  use Math (caddf, csubf, cmulf, cscamulf, cdivf);
-  use Math (cadd, csub, cmul, cscamul, cdiv);
+  use JSON (complexf);
+  use JSON (complex);
+  use JSON (caddf, csubf, cmulf, cscamulf, cdivf);
+  use JSON (cadd, csub, cmul, cscamul, cdiv);
   
   static method new_float_complex : void () {
     

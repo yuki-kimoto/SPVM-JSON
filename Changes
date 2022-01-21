@@ -1,4 +1,4 @@
-Revision history for SPVM::Math
+Revision history for SPVM::JSON
 
 0.05  2021-12-24
         [CHANGES]
@@ -18,4 +18,4 @@ Revision history for SPVM::Math
 
 0.01  2021-12-07
         [CHANGES]
-        * SPVM::Math is separated from SPVM core module.
+        * SPVM::JSON is separated from SPVM core module.

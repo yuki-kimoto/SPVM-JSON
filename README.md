@@ -1,7 +1,7 @@
-# SPVM::Math
+# SPVM::JSON
 
-SPVM::Math is a SPVM module that defines mathmatical functions. 
+SPVM::JSON is a SPVM module that defines mathmatical functions. 
 
 # Documents
 
-<a href="https://metacpan.org/pod/SPVM::Math">SPVM::Math</a>
+<a href="https://metacpan.org/pod/SPVM::JSON">SPVM::JSON</a>
