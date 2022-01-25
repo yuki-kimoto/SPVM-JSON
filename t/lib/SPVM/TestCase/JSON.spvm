@@ -2,6 +2,7 @@ class TestCase::JSON {
   use JSON;
   use List;
   use Hash;
+  use Fn;
 
   our $DEFAULT_JSON : JSON;
 
@@ -645,30 +646,28 @@ class TestCase::JSON {
       }
     }
 
-=pod
     # [TODO]
     # control characters are not allowed
     {
       for (my $ch : byte = 0; $ch <= 31; ++$ch) {
         eval {
-          $DEFAULT_JSON->decode("\"" . [$ch ] . "\"");
+          $DEFAULT_JSON->decode("\"" . (string)[(byte)$ch] . "\"");
         };
-        unless ($@ && Fn->index($@, "Control ASCII characters are not allowed in string")) {
+        unless ($@ && Fn->index($@, "Control ASCII characters are not allowed in string", 0) >= 0) {
           $@ = undef;
           return 0;
         }
         $@ = undef;
       }
       eval {
-        $DEFAULT_JSON->decode("\"" . [ (byte)127 ] . "\"");
+        $DEFAULT_JSON->decode("\"" . (string)[(byte)127 ] . "\"");
       };
-      unless ($@ && Fn->index($@, "Control ASCII characters are not allowed in string")) {
+      unless ($@ && Fn->index($@, "Control ASCII characters are not allowed in string", 0) >= 0) {
         $@ = undef;
         return 0;
       }
       $@ = undef;
     }
-=cut
 
     return 1;
   }
