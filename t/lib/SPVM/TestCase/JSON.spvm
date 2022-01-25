@@ -596,18 +596,17 @@ class TestCase::JSON {
         return 0;
       }
     }
-=pod
+
     # TODO
     # '\b'
     {
-      my $input = "\"\\b\"";
+      my $input = "\"\b\"";
       my $got = $DEFAULT_JSON->decode($input);
-      my $expected = "\b";
+      my $expected = "\x08";
       unless (&_equals($got, $expected)) {
         return 0;
       }
     }
-=cut
 
     # '\f'
     {
