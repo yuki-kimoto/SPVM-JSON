@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 use strict;
 use warnings;
 
-use SPVM::Builder::Util;
+use SPVM::Builder::Util::API;
 
 WriteMakefile(
     NAME              => 'SPVM::JSON',
@@ -27,7 +27,7 @@ WriteMakefile(
         },
     },
     PREREQ_PM => {
-        'SPVM'              => '0.9021',
+        'SPVM'              => '0.9500',
     },
 );
 
@@ -37,7 +37,7 @@ sub MY::postamble {
   my $make_rule = '';
   
   # Native compile make rule
-  $make_rule .= SPVM::Builder::Util::create_make_rule_precompile('JSON');
+  $make_rule .= SPVM::Builder::Util::API::create_make_rule_precompile('JSON');
   
   return $make_rule;
 }
