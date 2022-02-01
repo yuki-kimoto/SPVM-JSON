@@ -1,5 +1,9 @@
 Revision history for SPVM::JSON
 
+0.06  2022-02-01
+        [CHANGES]
+        * SPVM::JSON needs SPVM 0.9500+.
+
 0.05  2021-12-24
         [CHANGES]
         * Fix only document.
