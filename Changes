@@ -5,6 +5,8 @@
     * Fixed the repository URL.
   [Test Improvement]
     * Added CIs
+  [License Change]
+    * The license is changed to MIT License.
 0.04  2023-03-19
   [Internal Compatible Changes]
     * Use SPVM::ExchangeAPI method instead of SPVM functions.
