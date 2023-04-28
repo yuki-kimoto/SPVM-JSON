@@ -554,7 +554,7 @@ class JSON : precompile {
         die "A float value must be not inifinity";
       }
       
-      $json = (string)(double)$value;
+      $json = (string)$value;
     }
     # Double
     elsif ($spvm_data isa Double) {
