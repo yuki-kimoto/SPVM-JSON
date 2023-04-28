@@ -88,3 +88,7 @@ sorting their keys. This is adding a comparatively high overhead.
   method canonical : byte ()
 
 Get the canonical flag.
+
+=head1 Repository
+
+L<SPVM::JSON - Github|https://github.com/yuki-kimoto/SPVM-JSON>

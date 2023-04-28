@@ -34,8 +34,8 @@ WriteMakefile(
       resources => {
           repository => {
               type => 'git',
-              url  => 'https://github.com/yuki-kimoto/Perl-SPVM-JSON.git',
-              web  => 'https://github.com/yuki-kimoto/Perl-SPVM-JSON',
+              url  => 'https://github.com/yuki-kimoto/SPVM-JSON.git',
+              web  => 'https://github.com/yuki-kimoto/SPVM-JSON',
           },
       },
   },
