@@ -92,3 +92,9 @@ Get the canonical flag.
 =head1 Repository
 
 L<SPVM::JSON - Github|https://github.com/yuki-kimoto/SPVM-JSON>
+
+=head1 Copyright & License
+
+Copyright (c) 2023 Yuki Kimoto
+
+MIT License

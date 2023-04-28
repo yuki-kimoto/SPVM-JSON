@@ -23,7 +23,7 @@ WriteMakefile(
   NAME              => 'SPVM::JSON',
   VERSION_FROM      => 'lib/SPVM/JSON.pm', # finds $VERSION
   PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-  LICENSE           => 'perl_5',
+  LICENSE           => 'mit',
   ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
     (ABSTRACT_FROM  => 'lib/SPVM/JSON.pm', # retrieve abstract from module
      AUTHOR         => 'Yuki Kimoto<kimoto.yuki@gmail.com>') : ()),

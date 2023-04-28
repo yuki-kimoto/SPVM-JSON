@@ -1,3 +1,6 @@
+# Copyright (c) 2023 Yuki Kimoto
+# MIT License
+
 class JSON : precompile {
   use Hash;
   use List;
