@@ -4,7 +4,7 @@
   [New Features]
     * The new method in the JSON class receive options
     * Added the canonical option of the new method in the JSON class.
-    * Added the JSON::Number class.
+    
   [Incompatible Changes]
     * the definition of the canonical field is changed.
       [Before]
