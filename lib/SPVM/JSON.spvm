@@ -571,8 +571,6 @@ class JSON : precompile {
 
 =pod TODO
 
-canonical => default false | field
-allow_nonref => always true
 convert_blessed => exception
 escape_slash => default false | field
 allow_dupkeys => always true
