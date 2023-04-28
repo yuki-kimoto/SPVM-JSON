@@ -430,20 +430,46 @@ class TestCase::JSON {
       }
     }
     
-    # Int
+    # Exceptions
     {
-      my $test_case_json = ["-1", "0", "1"];
-      my $test_case_int  = [-1, 0, 1];
-      for (my $i = 0; $i < @$test_case_json; ++$i) {
-        my $input    = Int->new($test_case_int->[$i]);
-        my $got      = $DEFAULT_JSON->encode($input);
-        my $expected = $test_case_json->[$i];
-        unless ($got eq $expected) {
+      # Float - Infinity
+      {
+        my $input = Math->INFINITYF;
+        eval { $DEFAULT_JSON->encode($input); };
+        unless (Fn->contains($@, "A float value must be not inifinity")) {
           return 0;
         }
       }
-      return 1;
+      
+      # Float - NaN
+      {
+        my $input = Math->NANF;
+        eval { $DEFAULT_JSON->encode($input); };
+        unless (Fn->contains($@, "A float value must be not NaN")) {
+          return 0;
+        }
+      }
+      
+      # Double - Infinity
+      {
+        my $input = Math->INFINITY;
+        eval { $DEFAULT_JSON->encode($input); };
+        unless (Fn->contains($@, "A double value must be not inifinity")) {
+          return 0;
+        }
+      }
+      
+      # Double - NaN
+      {
+        my $input = Math->NAN;
+        eval { $DEFAULT_JSON->encode($input); };
+        unless (Fn->contains($@, "A double value must be not NaN")) {
+          return 0;
+        }
+      }
     }
+    
+    $@ = undef;
     
     return 1;
   }

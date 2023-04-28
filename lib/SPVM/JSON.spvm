@@ -8,6 +8,7 @@ class JSON : precompile {
   use Fn;
   use Array;
   use Sort;
+  use Math;
   
   # Enumerations
   private enum {
@@ -545,11 +546,27 @@ class JSON : precompile {
     }
     # float
     elsif ($spvm_data isa Float) {
-      $json = (string)(double)(((Float)$spvm_data)->value);
+      my $value = $spvm_data->(Float)->value;
+      if (Math->isnanf($value)) {
+        die "A float value must be not NaN";
+      }
+      elsif (Math->isinff($value)) {
+        die "A float value must be not inifinity";
+      }
+      
+      $json = (string)(double)$value;
     }
     # double
     elsif ($spvm_data isa Double) {
-      $json = (string)(((Double)$spvm_data)->value);
+      my $value = $spvm_data->(Double)->value;
+      if (Math->isnan($value)) {
+        die "A double value must be not NaN";
+      }
+      elsif (Math->isinf($value)) {
+        die "A double value must be not inifinity";
+      }
+      
+      $json = (string)$value;
     }
     # bool
     elsif ($spvm_data isa Bool) {
