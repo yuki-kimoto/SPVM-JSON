@@ -710,7 +710,7 @@ class TestCase::JSON {
         return 0;
       }
     }
-    # '/'
+    # '\/'
     {
       my $input = "\"\\/\"";
       my $got = $DEFAULT_JSON->decode($input);
