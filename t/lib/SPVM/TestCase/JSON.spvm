@@ -122,7 +122,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_flat_hash : int () {
+  static method encode_hash : int () {
     {
       my $input    = Hash->new({});
       my $got      = $DEFAULT_JSON->encode($input);
@@ -184,10 +184,38 @@ class TestCase::JSON {
         return 0;
       }
     }
+
+    {
+      my $input = Hash->new({
+        "A" => Hash->new({
+          "B" => 1,
+          "C" => Hash->new({
+            "D" => 0.1,
+            "E" => true,
+            "F" => "str",
+            "G" => List->new([(object)
+              "abc",
+              123,
+              Hash->new({
+                "H" => "val",
+            }),
+            ]),
+          })
+        }),
+        "I" => "EOF",
+      });
+      my $got = $DEFAULT_JSON->encode($input);
+      my $expected = "{\"A\":{\"B\":1,\"C\":{\"D\":0.1,\"E\":true,\"F\":\"str\",\"G\":[\"abc\",123,{\"H\":\"val\"}]}},\"I\":\"EOF\"}";
+      unless ($got eq $expected) {
+        return 0;
+      }
+      return 1;
+    }
+
     return 1;
   }
 
-  static method decode_flat_hash : int () {
+  static method decode_hash : int () {
     {
       my $input    = "{}";
       my $got      = $DEFAULT_JSON->decode($input);
@@ -251,10 +279,38 @@ class TestCase::JSON {
         return 0;
       }
     }
+    
+    {
+      my $input = "{\"A\":{\"B\":1,\"C\":{\"D\":0.1,\"E\":true,\"F\":\"str\",\"G\":[\"abc\",123,{\"H\":\"val\"}]}},\"I\":\"EOF\"}";
+      my $got = $DEFAULT_JSON->decode($input);
+      my $expected = Hash->new({
+        "A" => Hash->new({
+          "B" => 1.0,
+          "C" => Hash->new({
+            "D" => 0.1,
+            "E" => true,
+            "F" => "str",
+            "G" => List->new([(object)
+              "abc",
+              123.0,
+              Hash->new({
+                "H" => "val",
+              }),
+            ]),
+          })
+        }),
+        "I" => "EOF",
+      });
+      unless (&_equals($got, $expected)) {
+        return 0;
+      }
+      return 1;
+    }
+    
     return 1;
   }
 
-  static method encode_flat_list : int () {
+  static method encode_list : int () {
     {
       my $input    = List->new([]);
       my $got      = $DEFAULT_JSON->encode($input);
@@ -290,7 +346,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method decode_flat_list : int () {
+  static method decode_list : int () {
     {
       my $input    = "[]";
       my $got      = $DEFAULT_JSON->decode($input);
@@ -334,21 +390,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_int : int () {
-    my $test_case_json = ["-1", "0", "1"];
-    my $test_case_int  = [-1, 0, 1];
-    for (my $i = 0; $i < @$test_case_json; ++$i) {
-      my $input    = Int->new($test_case_int->[$i]);
-      my $got      = $DEFAULT_JSON->encode($input);
-      my $expected = $test_case_json->[$i];
-      unless ($got eq $expected) {
-        return 0;
-      }
-    }
-    return 1;
-  }
-
-  static method encode_double : int () {
+  static method encode_number : int () {
     my $test_case  = [
       0.123, -0.123, 3.14, -3.14, 123.987, -123.987,
       1.23456e+1, 1.23456e-1, 1.23456e+08, 1.23456e-08, 1.23456e+008, 1.23456e-008,
@@ -362,10 +404,26 @@ class TestCase::JSON {
         return 0;
       }
     }
+    
+    # Int
+    {
+      my $test_case_json = ["-1", "0", "1"];
+      my $test_case_int  = [-1, 0, 1];
+      for (my $i = 0; $i < @$test_case_json; ++$i) {
+        my $input    = Int->new($test_case_int->[$i]);
+        my $got      = $DEFAULT_JSON->encode($input);
+        my $expected = $test_case_json->[$i];
+        unless ($got eq $expected) {
+          return 0;
+        }
+      }
+      return 1;
+    }
+    
     return 1;
   }
 
-  static method decode_double : int () {
+  static method decode_number : int () {
     my $test_case  = [
       0.123, -0.123, 3.14, -3.14, 123.987, -123.987,
       1.23456e+1, 1.23456e-1, 1.23456e+08, 1.23456e-08, 1.23456e+008, 1.23456e-008,
@@ -669,60 +727,6 @@ class TestCase::JSON {
       $@ = undef;
     }
 
-    return 1;
-  }
-
-  static method encode_nested_hash : int () {
-    my $input = Hash->new({
-      "A" => Hash->new({
-        "B" => 1,
-        "C" => Hash->new({
-          "D" => 0.1,
-          "E" => true,
-          "F" => "str",
-          "G" => List->new([(object)
-            "abc",
-            123,
-            Hash->new({
-              "H" => "val",
-          }),
-          ]),
-        })
-      }),
-      "I" => "EOF",
-    });
-    my $got = $DEFAULT_JSON->encode($input);
-    my $expected = "{\"A\":{\"B\":1,\"C\":{\"D\":0.1,\"E\":true,\"F\":\"str\",\"G\":[\"abc\",123,{\"H\":\"val\"}]}},\"I\":\"EOF\"}";
-    unless ($got eq $expected) {
-      return 0;
-    }
-    return 1;
-  }
-
-  static method decode_nested_hash : int () {
-    my $input = "{\"A\":{\"B\":1,\"C\":{\"D\":0.1,\"E\":true,\"F\":\"str\",\"G\":[\"abc\",123,{\"H\":\"val\"}]}},\"I\":\"EOF\"}";
-    my $got = $DEFAULT_JSON->decode($input);
-    my $expected = Hash->new({
-      "A" => Hash->new({
-        "B" => 1.0,
-        "C" => Hash->new({
-          "D" => 0.1,
-          "E" => true,
-          "F" => "str",
-          "G" => List->new([(object)
-            "abc",
-            123.0,
-            Hash->new({
-              "H" => "val",
-            }),
-          ]),
-        })
-      }),
-      "I" => "EOF",
-    });
-    unless (&_equals($got, $expected)) {
-      return 0;
-    }
     return 1;
   }
 

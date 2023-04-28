@@ -14,24 +14,21 @@ my $start_memory_blocks_count = SPVM::api->get_memory_blocks_count();
 # encode
 {
   ok(SPVM::TestCase::JSON->encode_null);
-  ok(SPVM::TestCase::JSON->encode_flat_hash);
-  ok(SPVM::TestCase::JSON->encode_flat_list);
-  ok(SPVM::TestCase::JSON->encode_int);
-  ok(SPVM::TestCase::JSON->encode_double);
   ok(SPVM::TestCase::JSON->encode_bool);
+  ok(SPVM::TestCase::JSON->encode_number);
   ok(SPVM::TestCase::JSON->encode_string);
-  ok(SPVM::TestCase::JSON->encode_nested_hash);
+  ok(SPVM::TestCase::JSON->encode_list);
+  ok(SPVM::TestCase::JSON->encode_hash);
 }
 
 # decode
 {
   ok(SPVM::TestCase::JSON->decode_null);
-  ok(SPVM::TestCase::JSON->decode_flat_hash);
-  ok(SPVM::TestCase::JSON->decode_flat_list);
-  ok(SPVM::TestCase::JSON->decode_double);
   ok(SPVM::TestCase::JSON->decode_bool);
+  ok(SPVM::TestCase::JSON->decode_number);
   ok(SPVM::TestCase::JSON->decode_string);
-  ok(SPVM::TestCase::JSON->decode_nested_hash);
+  ok(SPVM::TestCase::JSON->decode_list);
+  ok(SPVM::TestCase::JSON->decode_hash);
 }
 
 # All object is freed
