@@ -22,7 +22,7 @@ class JSON : precompile {
   }
   
   # Fields
-  has canonical : rw byte;
+  has canonical : ro byte;
   
   # Class Methods
   static method new : JSON ($options : object[]) {
