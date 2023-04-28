@@ -553,7 +553,7 @@ class JSON : precompile {
     }
     # bool
     elsif ($spvm_data isa Bool) {
-      if (((Bool)$spvm_data)->value) {
+      if ($spvm_data->(Bool)) {
         $json = "true";
       }
       else {
