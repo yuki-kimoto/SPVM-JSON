@@ -122,7 +122,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_hash : int () {
+  static method encode_json_hash : int () {
     {
       my $input    = Hash->new({});
       my $got      = $DEFAULT_JSON->encode($input);
@@ -215,7 +215,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method decode_hash : int () {
+  static method decode_json_hash : int () {
     {
       my $input    = "{}";
       my $got      = $DEFAULT_JSON->decode($input);
@@ -310,7 +310,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_list : int () {
+  static method encode_json_list : int () {
     {
       my $input    = List->new([]);
       my $got      = $DEFAULT_JSON->encode($input);
@@ -346,7 +346,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method decode_list : int () {
+  static method decode_json_list : int () {
     {
       my $input    = "[]";
       my $got      = $DEFAULT_JSON->decode($input);
@@ -390,7 +390,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_number : int () {
+  static method encode_json_number : int () {
     my $test_case  = [
       0.123, -0.123, 3.14, -3.14, 123.987, -123.987,
       1.23456e+1, 1.23456e-1, 1.23456e+08, 1.23456e-08, 1.23456e+008, 1.23456e-008,
@@ -423,7 +423,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method decode_number : int () {
+  static method decode_json_number : int () {
     my $test_case  = [
       0.123, -0.123, 3.14, -3.14, 123.987, -123.987,
       1.23456e+1, 1.23456e-1, 1.23456e+08, 1.23456e-08, 1.23456e+008, 1.23456e-008,
@@ -520,7 +520,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_bool : int () {
+  static method encode_json_bool : int () {
     {
       my $input = true;
       my $got = $DEFAULT_JSON->encode($input);
@@ -540,7 +540,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method decode_bool : int () {
+  static method decode_json_bool : int () {
     {
       my $input = "true";
       my $got = $DEFAULT_JSON->decode($input);
@@ -560,7 +560,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_string : int () {
+  static method encode_json_string : int () {
     {
       my $input = "str";
       my $got = $DEFAULT_JSON->encode($input);
@@ -618,7 +618,7 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method decode_string : int () {
+  static method decode_json_string : int () {
     {
       my $input = "\"str\"";
       my $got = $DEFAULT_JSON->decode($input);
@@ -730,14 +730,14 @@ class TestCase::JSON {
     return 1;
   }
 
-  static method encode_null : int () {
+  static method encode_json_null : int () {
     unless ($DEFAULT_JSON->encode(undef) eq "null") {
       return 0;
     }
     return 1;
   }
   
-  static method decode_null : int () {
+  static method decode_json_null : int () {
     unless ($DEFAULT_JSON->decode("null") == undef) {
       return 0;
     }

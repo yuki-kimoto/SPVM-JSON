@@ -11,24 +11,24 @@ use SPVM 'TestCase::JSON';
 # Start objects count
 my $start_memory_blocks_count = SPVM::api->get_memory_blocks_count();
 
-# encode
+# encode_json
 {
-  ok(SPVM::TestCase::JSON->encode_null);
-  ok(SPVM::TestCase::JSON->encode_bool);
-  ok(SPVM::TestCase::JSON->encode_number);
-  ok(SPVM::TestCase::JSON->encode_string);
-  ok(SPVM::TestCase::JSON->encode_list);
-  ok(SPVM::TestCase::JSON->encode_hash);
+  ok(SPVM::TestCase::JSON->encode_json_null);
+  ok(SPVM::TestCase::JSON->encode_json_bool);
+  ok(SPVM::TestCase::JSON->encode_json_number);
+  ok(SPVM::TestCase::JSON->encode_json_string);
+  ok(SPVM::TestCase::JSON->encode_json_list);
+  ok(SPVM::TestCase::JSON->encode_json_hash);
 }
 
-# decode
+# decode_json
 {
-  ok(SPVM::TestCase::JSON->decode_null);
-  ok(SPVM::TestCase::JSON->decode_bool);
-  ok(SPVM::TestCase::JSON->decode_number);
-  ok(SPVM::TestCase::JSON->decode_string);
-  ok(SPVM::TestCase::JSON->decode_list);
-  ok(SPVM::TestCase::JSON->decode_hash);
+  ok(SPVM::TestCase::JSON->decode_json_null);
+  ok(SPVM::TestCase::JSON->decode_json_bool);
+  ok(SPVM::TestCase::JSON->decode_json_number);
+  ok(SPVM::TestCase::JSON->decode_json_string);
+  ok(SPVM::TestCase::JSON->decode_json_list);
+  ok(SPVM::TestCase::JSON->decode_json_hash);
 }
 
 # All object is freed
