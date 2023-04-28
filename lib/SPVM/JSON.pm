@@ -18,6 +18,7 @@ The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.
   
   # new
   my $json = JSON->new;
+  my $json = JSON->new({canonical => 1});
   
   # decode
   my $spvm_data = $json->decode($json_text);
@@ -47,7 +48,7 @@ Options:
 
 =over 2
 
-=item C<canonical>
+=item * C<canonical>
 
 Sets the C<canonical> field.
 
@@ -57,7 +58,7 @@ Default:
 
 Exceptions:
 
-The value must be an instance of the C<Int|SPVM::Int> class. Otherwise an exception is thrown.
+The value must be an instance of the L<Int|SPVM::Int> class. Otherwise an exception is thrown.
 
 =back
 
@@ -69,21 +70,53 @@ If an unsupported option is passed, an exception is thrown.
 
 =head2 encode
 
-  method encode : string ($object : object);
+  method encode : string ($spvm_data : object);
 
-Converts the given SPVM data structure (undef or a object of numeric,
-L<string>, L<SPVM::JSON::Bool>, L<SPVM::Hash> or L<SPVM::ObjectList>)
-to its JSON representation.
+Converts the SPVM data $spvm_data to a JSON data.
 
-C</> in a string is escaped to C<\/>.
+A SPVM C<undef> is converted to a JSON C<null>.
+
+A L<Bool|SPVM::Bool> object with the C<value> field of 1 is converted to JSON C<true>.
+
+A L<Bool|SPVM::Bool> object with the C<value> field of 0 is converted to a JSON C<false>.
+
+A SPVM string is converted to a JSON string. C</> in a SPVM string is escaped to C<\/> in a JSON string.
+
+A L<Byte|SPVM::Byte> object is converted to a JSON number.
+
+A L<Short|SPVM::Short> object is converted to a JSON number.
+
+A L<Int|SPVM::Int> object is converted to a JSON number.
+
+A L<Long|SPVM::Long> object is converted to a JSON number. Accuracy may be reduced.
+
+A L<Float|SPVM::Float> object is converted to a JSON number.
+
+A L<Double|SPVM::Double> object is converted to a JSON number.
+
+A L<List|SPVM::List> object is converted to a JSON array.
+
+A L<Hash|SPVM::Hash> object is converted to a JSON object.
 
 =head2 decode
 
   method decode : object ($json : string);
 
-The opposite of encode: expects a JSON text and tries to parse it, returning
-the resulting object. Dies on error. Numbers in a JSON text are converted
-to L<SPVM::Double>.
+Converts the JSON data $json to a SPVM data.
+
+A JSON C<null> is converted to a SPVM C<undef>.
+
+A JSON C<true> is converted to a L<Bool|SPVM::Bool> object with the C<value> field of 1.
+
+A JSON C<false> is converted to a L<Bool|SPVM::Bool> object with the C<value> field of 0.
+
+A JSON string is converted to a SPVM string.
+
+A JSON number is converted to a L<Double|SPVM::Double> object. Accuracy may be reduced.
+
+A JSON array is converted to a L<List|SPVM::List> object.
+
+A JSON object is converted to a L<Hash|SPVM::Hash> object.
 
 =head1 Repository
 
