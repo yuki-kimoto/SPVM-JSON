@@ -10,7 +10,9 @@
       
       [After]
       has canonical : ro byte;
-      
+    * The encode_json method output 64bit integer value for a Long object.
+    * The encode_json method output 32bit integer value for a Int object.
+    
   [Prerequirement Changes]
     * SPVM 0.971008+ is required.
     * SPVM::Math 1.001+ is required.
@@ -20,6 +22,8 @@
     * Added CIs
   [License Change]
     * The license is changed to MIT License.
+  [Incompatible Changes]
+    * The encode_json method throw an exception if a float value or a double value is NaN or Inifinity.
 0.04  2023-03-19
   [Internal Compatible Changes]
     * Use SPVM::ExchangeAPI method instead of SPVM functions.

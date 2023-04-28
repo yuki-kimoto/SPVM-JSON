@@ -429,6 +429,46 @@ class TestCase::JSON {
         return 0;
       }
     }
+
+    # Byte
+    {
+      my $input    = Fn->BYTE_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-128";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
+    
+    # Short
+    {
+      my $input    = Fn->SHORT_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-32768";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
+    
+    # Int
+    {
+      my $input    = Fn->INT_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-2147483648";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
+    
+    # Long
+    {
+      my $input    = Fn->LONG_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-9223372036854775808";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
     
     # Exceptions
     {

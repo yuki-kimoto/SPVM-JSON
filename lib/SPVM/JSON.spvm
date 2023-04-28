@@ -505,7 +505,7 @@ class JSON : precompile {
       
       $json = $buffer->to_string;
     }
-    # Array
+    # List
     elsif ($spvm_data isa List) {
       my $buffer = StringBuffer->new;
       $buffer->push_char('[');
@@ -528,23 +528,23 @@ class JSON : precompile {
       my $escaped = &_escape_string((string)$spvm_data);
       $json = "\"" . $escaped . "\"";
     }
-    # byte
+    # Byte
     elsif ($spvm_data isa Byte) {
-      $json = (string)(double)(((Byte)$spvm_data)->value);
+      $json = (string)$spvm_data->(Byte)->value;
     }
-    # short
+    # Short
     elsif ($spvm_data isa Short) {
-      $json = (string)(double)(((Short)$spvm_data)->value);
+      $json = (string)$spvm_data->(Short)->value;
     }
-    # int
+    # Int
     elsif ($spvm_data isa Int) {
-      $json = (string)(double)(((Int)$spvm_data)->value);
+      $json = (string)$spvm_data->(Int)->value;
     }
-    # long
+    # Long
     elsif ($spvm_data isa Long) {
-      $json = (string)(double)(((Long)$spvm_data)->value);
+      $json = (string)$spvm_data->(Long)->value;
     }
-    # float
+    # Float
     elsif ($spvm_data isa Float) {
       my $value = $spvm_data->(Float)->value;
       if (Math->isnanf($value)) {
@@ -556,7 +556,7 @@ class JSON : precompile {
       
       $json = (string)(double)$value;
     }
-    # double
+    # Double
     elsif ($spvm_data isa Double) {
       my $value = $spvm_data->(Double)->value;
       if (Math->isnan($value)) {
@@ -568,7 +568,7 @@ class JSON : precompile {
       
       $json = (string)$value;
     }
-    # bool
+    # Bool
     elsif ($spvm_data isa Bool) {
       if ($spvm_data->(Bool)) {
         $json = "true";
