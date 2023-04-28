@@ -22,14 +22,9 @@ class JSON : precompile {
     DECODE_NUM_END,
   }
   
-  # Fields
-  has canonical : ro byte;
-  
   # Class Methods
-  static method new : JSON ($options : object[]) {
+  static method new : JSON () {
     my $self = new JSON;
-    
-    $self->init($options);
     
     return $self;
   }
@@ -86,16 +81,6 @@ class JSON : precompile {
   }
   
   # Instance Methods
-  private method init : void ($options : object[]) {
-    my $options_h = Hash->new($options);
-    
-    $self->{canonical} = (byte)$options_h->delete_or_default_int("canonical", 1);
-    
-    for my $name (@{$options_h->keys}) {
-      die "The \"$name\" option is not supported";
-    }
-  }
-  
   method encode : string ($object : object) {
     return $self->_encode_recursive($object, 0);
   }
@@ -487,9 +472,10 @@ class JSON : precompile {
       $buffer->push_char('{');
       my $hash = (Hash)$spvm_data;
       my $keys = $hash->keys;
-      if ($self->canonical) {
-        Sort->sort_string_asc($keys, 0, scalar @$keys);
-      }
+      
+      # Sort keys
+      Sort->sort_string_asc($keys, 0, scalar @$keys);
+      
       for (my $keys_index = 0; $keys_index < @$keys; ++$keys_index) {
         if ($keys_index > 0) {
           $buffer->push_char(',');

@@ -18,7 +18,6 @@ The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.
   
   # new
   my $json = JSON->new;
-  my $json = JSON->new({canonical => 1});
   
   # decode
   my $spvm_data = $json->decode($json_text);
@@ -26,45 +25,13 @@ The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.
   # encode
   my $json_text = $json->encode($spvm_data);
 
-=head1 Fields
-
-=head2 canonical
-
-  method canonical : byte ();
-
-Gets the C<canonical> field.
-
-If this field is a true value, the object keys of JSON created by the L</"encode> method are sorted.
-
 =head1 Class Methods
 
 =head2 new
 
-  static method new : JSON ($options : object[]);
+  static method new : JSON ();
 
 Creates a new L<JSON|SPVM::JSON> object.
-
-Options:
-
-=over 2
-
-=item * C<canonical>
-
-Sets the C<canonical> field.
-
-Default:
-
-1
-
-Exceptions:
-
-The value must be an instance of the L<Int|SPVM::Int> class. Otherwise an exception is thrown.
-
-=back
-
-Exceptions:
-
-If an unsupported option is passed, an exception is thrown.
 
 =head1 Instance Methods
 
@@ -96,7 +63,7 @@ A L<Double|SPVM::Double> object is converted to a JSON number.
 
 A L<List|SPVM::List> object is converted to a JSON array.
 
-A L<Hash|SPVM::Hash> object is converted to a JSON object.
+A L<Hash|SPVM::Hash> object is converted to a JSON object. The keys are sorted by dictionaly order asc.
 
 =head2 decode
 

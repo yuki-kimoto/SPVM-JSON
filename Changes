@@ -12,7 +12,7 @@
       has canonical : ro byte;
     * The encode_json method output 64bit integer value for a Long object.
     * The encode_json method output 32bit integer value for a Int object.
-    
+    * Removed the canonical field.
   [Prerequirement Changes]
     * SPVM 0.971008+ is required.
     * SPVM::Math 1.001+ is required.
