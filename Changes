@@ -1,3 +1,10 @@
+0.05 2023-04-28
+  [Prerequirement Changes]
+    * SPVM 0.971008+ is required.
+  [Meta Information Fix]
+    * Fixed the repository URL.
+  [Test Improvement]
+    * Added CIs
 0.04  2023-03-19
   [Internal Compatible Changes]
     * Use SPVM::ExchangeAPI method instead of SPVM functions.
