@@ -6,63 +6,70 @@ our $VERSION = '0.04';
 
 =head1 NAME
 
-SPVM::JSON - JSON serializing/deserializing
+SPVM::JSON - JSON
 
-=head1 SYNOPSYS
+=head1 Description
 
-B<SPVM:>
+The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.org/wiki/JSON>.
+
+=head1 Usage
 
   use JSON;
-
+  
   # new
   my $json = JSON->new;
-
+  
   # decode
-  $json->decode($json_text);
-
-  # set the canonical flag on
-  $json->set_canonical(1);
-
+  my $spvm_data = $json->decode($json_text);
+  
   # encode
-  my $encoded_json = $json->encode($spvm_data);
+  my $json_text = $json->encode($spvm_data);
 
-B<Perl:>
+=head1 Fields
 
-  use SPVM 'JSON';
+=head2 canonical
 
-  # new
-  my $json = SPVM::JSON->new;
+  method canonical : byte ();
 
-  # decode
-  $json->decode($json_text);
+Gets the C<canonical> field.
 
-  # set the canonical flag on
-  $json->set_canonical(1);
+If this field is a true value, the object keys of JSON created by the L</"encode> method are sorted.
 
-  # encode
-  my $encoded_json = $json->encode($spvm_data);
-
-=head1 DESCRIPTION
-
-B<SPVM::JSON> converts SPVM data structures to JSON and vice versa.
-
-B<SPVM::JSON> is a L<SPVM> module.
-
-B<SPVM is yet before 1.0 released. SPVM is changed without warnings. There will be quite a lot of changes.>
-
-=head1 CLASS METHODS
+=head1 Class Methods
 
 =head2 new
 
-  static method new : SPVM::JSON ()
+  static method new : JSON ($options : object[]);
 
-Create new L<SPVM::JSON> object that can be used to de/encode JSON strings.
+Creates a new L<JSON|SPVM::JSON> object.
 
-=head1 INSTANCE METHODS
+Options:
+
+=over 2
+
+=item C<canonical>
+
+Sets the C<canonical> field.
+
+Default:
+
+1
+
+Exceptions:
+
+The value must be an instance of the C<Int|SPVM::Int> class. Otherwise an exception is thrown.
+
+=back
+
+Exceptions:
+
+If an unsupported option is passed, an exception is thrown.
+
+=head1 Instance Methods
 
 =head2 encode
 
-  method encode : string ($object : object)
+  method encode : string ($object : object);
 
 Converts the given SPVM data structure (undef or a object of numeric,
 L<string>, L<SPVM::JSON::Bool>, L<SPVM::Hash> or L<SPVM::ObjectList>)
@@ -70,24 +77,11 @@ to its JSON representation.
 
 =head2 decode
 
-  method decode : object ($json : string)
+  method decode : object ($json : string);
 
 The opposite of encode: expects a JSON text and tries to parse it, returning
 the resulting object. Dies on error. Numbers in a JSON text are converted
 to L<SPVM::Double>.
-
-=head2 set_canonical
-
-  method set_canonical : void ($enable : byte)
-
-If C<$enable> is true, then the encode method will output JSON objects by
-sorting their keys. This is adding a comparatively high overhead.
-
-=head2 canonical
-
-  method canonical : byte ()
-
-Get the canonical flag.
 
 =head1 Repository
 

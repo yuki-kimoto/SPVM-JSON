@@ -8,8 +8,7 @@ class TestCase::JSON {
   our $DEFAULT_JSON : JSON;
 
   INIT {
-    $DEFAULT_JSON = JSON->new;
-    $DEFAULT_JSON->set_canonical(1);
+    $DEFAULT_JSON = JSON->new({canonical => 1});
   }
 
   static method _equals : int ($lhs : object, $rhs : object) {

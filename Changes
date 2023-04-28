@@ -1,4 +1,16 @@
 0.05 2023-04-28
+  [New Features]
+    * The new method in the JSON class receive options
+    * Added the canonical option of the new method in the JSON class.
+    
+  [Incompatible Changes]
+    * the definition of the canonical field is changed.
+      [Before]
+      has canonical : rw byte;
+      
+      [After]
+      has canonical : ro byte;
+      
   [Prerequirement Changes]
     * SPVM 0.971008+ is required.
   [Meta Information Fix]
