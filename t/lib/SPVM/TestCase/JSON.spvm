@@ -425,6 +425,7 @@ class TestCase::JSON {
       my $input    = Double->new($test_case->[$i]);
       my $got      = $DEFAULT_JSON->encode($input);
       my $expected = "" . $test_case->[$i];
+      warn "[Test Output]Got:$got,Expected:$expected";
       unless ($got eq $expected) {
         return 0;
       }
