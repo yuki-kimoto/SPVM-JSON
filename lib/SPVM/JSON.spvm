@@ -9,8 +9,28 @@ class JSON : precompile {
   use Array;
   use Sort;
   
+  # Enumerations
+  private enum {
+    DECODE_NUM_BEGIN,
+    DECODE_NUM_LEADING_DIGIT,
+    DECODE_NUM_DOT,
+    DECODE_NUM_FRAC,
+    DECODE_NUM_EXP,
+    DECODE_NUM_EXP_SIGN,
+    DECODE_NUM_EXP_DIGIT,
+    DECODE_NUM_END,
+  }
+  
+  # Fields
   has canonical : rw byte;
-
+  
+  # Class Methods
+  static method new : JSON () {
+    my $self = new JSON;
+    
+    return $self;
+  }
+  
   private static method _decode_error : void ($die_message : string, $json : string, $start : int) {
     my $end = length $json;
     my $max_dump_length = 10;
@@ -26,7 +46,7 @@ class JSON : precompile {
     }
     die $die_message . " ... $hint";
   }
-
+  
   private method _skip_spaces : void ($json : string, $iter : int*) {
     my $end = length $json;
     for (; 1 ; ++$$iter) {
@@ -38,7 +58,7 @@ class JSON : precompile {
       }
     }
   }
-
+  
   private static method _expect_char : void ($json : string, $iter : int*, $expected : byte) {
     my $end = length $json;
     unless ($$iter + 1 <= $end && $json->[$$iter] == $expected) {
@@ -46,7 +66,7 @@ class JSON : precompile {
     }
     ++$$iter;
   }
-
+  
   private static method _expect_token : void ($json : string, $iter : int*, $expected : string) {
     my $end = length $json;
     my $length = length $expected;
@@ -61,7 +81,28 @@ class JSON : precompile {
       &_decode_error("Expected token: $expected doesn't exist", $json, $$iter);
     }
   }
+  
+  # Instance Methods
+  method encode : string ($object : object) {
+    return $self->_encode_recursive($object, 0);
+  }
+  
+  method decode : object ($json : string) {
+    my $iter = 0;
+    my $spvm_data = $self->_decode_recursive($json, \$iter);
 
+    # allow $json to have trailing spaces.
+    $self->_skip_spaces($json, \$iter);
+
+    # do not allow $json to have non-space string after a json object,
+    # something like `{"key":1} [1,2]`
+    my $length = length $json;
+    unless ($iter == $length) {
+      &_decode_error("garbage after JSON object", $json, $iter);
+    }
+    
+    return $spvm_data;
+  }
   private method _decode_string : string ($json : string, $iter : int*) {
     my $end = length $json;
     my $buffer = StringBuffer->new;
@@ -126,17 +167,6 @@ class JSON : precompile {
     &_expect_char($json, $iter, '\"');
 
     return (string)$buffer->to_string;
-  }
-
-  private enum {
-    DECODE_NUM_BEGIN,
-    DECODE_NUM_LEADING_DIGIT,
-    DECODE_NUM_DOT,
-    DECODE_NUM_FRAC,
-    DECODE_NUM_EXP,
-    DECODE_NUM_EXP_SIGN,
-    DECODE_NUM_EXP_DIGIT,
-    DECODE_NUM_END,
   }
 
   private method _decode_num : object ($json : string, $iter : int*) {
@@ -524,32 +554,7 @@ class JSON : precompile {
     
     return $json;
   }
-
-  static method new : JSON () {
-    my $json = new JSON;
-    return $json;
-  }
-
-  method encode : string ($object : object) {
-    return $self->_encode_recursive($object, 0);
-  }
-
-  method decode : object ($json : string) {
-    my $iter = 0;
-    my $spvm_data = $self->_decode_recursive($json, \$iter);
-
-    # allow $json to have trailing spaces.
-    $self->_skip_spaces($json, \$iter);
-
-    # do not allow $json to have non-space string after a json object,
-    # something like `{"key":1} [1,2]`
-    my $length = length $json;
-    unless ($iter == $length) {
-      &_decode_error("garbage after JSON object", $json, $iter);
-    }
-
-    return $spvm_data;
-  }
+  
 }
 
 =pod TODO
