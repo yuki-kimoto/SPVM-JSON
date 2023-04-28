@@ -1,6 +1,4 @@
 0.05 2023-04-28
-  [Changes]
-    * Allows the encode_json method to output 64bit integer value(long value).
   [New Features]
     * The new method in the JSON class receive options
     * Added the canonical option of the new method in the JSON class.
