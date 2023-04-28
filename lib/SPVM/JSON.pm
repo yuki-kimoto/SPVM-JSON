@@ -18,7 +18,6 @@ The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.
   
   # new
   my $json = JSON->new;
-  my $json = JSON->new({canonical => 0});
   
   # decode
   my $spvm_data = $json->decode($json_text);
@@ -48,7 +47,7 @@ Options:
 
 =over 2
 
-=item * C<canonical>
+=item C<canonical>
 
 Sets the C<canonical> field.
 
@@ -58,7 +57,7 @@ Default:
 
 Exceptions:
 
-The value must be an instance of the L<Int|SPVM::Int> class. Otherwise an exception is thrown.
+The value must be an instance of the C<Int|SPVM::Int> class. Otherwise an exception is thrown.
 
 =back
 
@@ -70,7 +69,7 @@ If an unsupported option is passed, an exception is thrown.
 
 =head2 encode
 
-  method encode : string ($spvm_data : object);
+  method encode : string ($object : object);
 
 Converts the given SPVM data structure (undef or a object of numeric,
 L<string>, L<SPVM::JSON::Bool>, L<SPVM::Hash> or L<SPVM::ObjectList>)

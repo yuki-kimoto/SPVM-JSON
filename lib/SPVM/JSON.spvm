@@ -8,7 +8,6 @@ class JSON : precompile {
   use Fn;
   use Array;
   use Sort;
-  use JSON::Number;
   
   # Enumerations
   private enum {
@@ -24,8 +23,6 @@ class JSON : precompile {
   
   # Fields
   has canonical : ro byte;
-  
-  # has allow_number_object : ro byte;
   
   # Class Methods
   static method new : JSON ($options : object[]) {
@@ -571,3 +568,10 @@ class JSON : precompile {
   }
   
 }
+
+=pod TODO
+
+escape_slash => default false | field
+
+=cut
+
