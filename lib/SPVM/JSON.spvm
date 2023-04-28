@@ -561,7 +561,7 @@ class JSON : precompile {
       }
     }
     else {
-      die "Invalid data type";
+      die "The \$spvm_data contains a value of an invalid type";
     }
     
     return $json;

@@ -4,6 +4,7 @@ class TestCase::JSON {
   use Hash;
   use Fn;
   use Sort;
+  use Point;
 
   our $DEFAULT_JSON : JSON;
 
@@ -211,10 +212,24 @@ class TestCase::JSON {
       }
       return 1;
     }
-
+    
     return 1;
   }
-
+  
+  static method encode_json_object : int () {
+    {
+      my $input = Point->new(1, 2);
+      eval { $DEFAULT_JSON->encode($input); };
+      unless (Fn->contains($@, "The \$spvm_data contains a value of an invalid type")) {
+        return 0;
+      }
+      
+      $@ = undef;
+    }
+    
+    return 1;
+  }
+  
   static method decode_json_hash : int () {
     {
       my $input    = "{}";

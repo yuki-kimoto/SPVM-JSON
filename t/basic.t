@@ -19,6 +19,7 @@ my $start_memory_blocks_count = SPVM::api->get_memory_blocks_count();
   ok(SPVM::TestCase::JSON->encode_json_string);
   ok(SPVM::TestCase::JSON->encode_json_list);
   ok(SPVM::TestCase::JSON->encode_json_hash);
+  ok(SPVM::TestCase::JSON->encode_json_object);
 }
 
 # decode_json
