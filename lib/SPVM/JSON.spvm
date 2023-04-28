@@ -572,7 +572,6 @@ class JSON : precompile {
 =pod TODO
 
 escape_slash => default false | field
-allow_dupkeys => always true
 
 =cut
 
