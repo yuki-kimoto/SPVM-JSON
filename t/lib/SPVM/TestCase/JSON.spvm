@@ -210,7 +210,6 @@ class TestCase::JSON {
       unless ($got eq $expected) {
         return 0;
       }
-      return 1;
     }
     
     return 1;
@@ -329,7 +328,6 @@ class TestCase::JSON {
       unless (&_equals($got, $expected)) {
         return 0;
       }
-      return 1;
     }
     
     return 1;
@@ -430,19 +428,44 @@ class TestCase::JSON {
       }
     }
     
+    # Byte
+    {
+      my $input    = Fn->BYTE_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-128";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
+    
+    # Short
+    {
+      my $input    = Fn->SHORT_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-32768";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
+    
     # Int
     {
-      my $test_case_json = ["-1", "0", "1"];
-      my $test_case_int  = [-1, 0, 1];
-      for (my $i = 0; $i < @$test_case_json; ++$i) {
-        my $input    = Int->new($test_case_int->[$i]);
-        my $got      = $DEFAULT_JSON->encode($input);
-        my $expected = $test_case_json->[$i];
-        unless ($got eq $expected) {
-          return 0;
-        }
+      my $input    = Fn->INT_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-2147483648";
+      unless ($got eq $expected) {
+        return 0;
       }
-      return 1;
+    }
+    
+    # Long
+    {
+      my $input    = Fn->LONG_MIN;
+      my $got      = $DEFAULT_JSON->encode($input);
+      my $expected = "-9223372036854775808";
+      unless ($got eq $expected) {
+        return 0;
+      }
     }
     
     return 1;

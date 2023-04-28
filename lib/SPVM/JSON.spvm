@@ -529,27 +529,27 @@ class JSON : precompile {
     }
     # byte
     elsif ($spvm_data isa Byte) {
-      $json = (string)(double)(((Byte)$spvm_data)->value);
+      $json = (string)$spvm_data->(Byte)->value;
     }
     # short
     elsif ($spvm_data isa Short) {
-      $json = (string)(double)(((Short)$spvm_data)->value);
+      $json = (string)$spvm_data->(Short)->value;
     }
     # int
     elsif ($spvm_data isa Int) {
-      $json = (string)(double)(((Int)$spvm_data)->value);
+      $json = (string)$spvm_data->(Int)->value;
     }
     # long
     elsif ($spvm_data isa Long) {
-      $json = (string)(double)(((Long)$spvm_data)->value);
+      $json = (string)$spvm_data->(Long)->value;
     }
     # float
     elsif ($spvm_data isa Float) {
-      $json = (string)(double)(((Float)$spvm_data)->value);
+      $json = (string)$spvm_data->(Float)->value;
     }
     # double
     elsif ($spvm_data isa Double) {
-      $json = (string)(((Double)$spvm_data)->value);
+      $json = (string)$spvm_data->(Double)->value;
     }
     # bool
     elsif ($spvm_data isa Bool) {
