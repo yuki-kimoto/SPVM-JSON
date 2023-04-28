@@ -1,0 +1,21 @@
+# Copyright (c) 2023 Yuki Kimoto
+# MIT License
+
+class JSON::Number {
+  # Fields
+  has number : ro string;
+  
+  # Class Methods
+  static method new : JSON::Number ($number : string) {
+    
+    unless ($number) {
+      die "The \$number must be defined";
+    }
+    
+    my $self = new JSON::Number;
+    
+    $self->{number} = $number;
+    
+    return $self;
+  }
+}
