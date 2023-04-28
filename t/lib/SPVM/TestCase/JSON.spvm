@@ -295,6 +295,16 @@ class TestCase::JSON {
       }
     }
     
+    # Duplicated keys - overwritten the first value
+    {
+      my $input    = "{\"foo\":\"a\", \"foo\":\"b\"}";
+      my $got      = $DEFAULT_JSON->decode($input);
+      my $expected = Hash->new({"foo" => "b"});
+      unless (&_equals($got, $expected)) {
+        return 0;
+      }
+    }
+    
     {
       my $input = "{\"A\":{\"B\":1,\"C\":{\"D\":0.1,\"E\":true,\"F\":\"str\",\"G\":[\"abc\",123,{\"H\":\"val\"}]}},\"I\":\"EOF\"}";
       my $got = $DEFAULT_JSON->decode($input);
