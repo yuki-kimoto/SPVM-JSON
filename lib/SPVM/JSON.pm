@@ -76,6 +76,8 @@ Converts the given SPVM data structure (undef or a object of numeric,
 L<string>, L<SPVM::JSON::Bool>, L<SPVM::Hash> or L<SPVM::ObjectList>)
 to its JSON representation.
 
+C</> in a string is escaped to C<\/>.
+
 =head2 decode
 
   method decode : object ($json : string);

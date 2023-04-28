@@ -27,8 +27,6 @@ class JSON : precompile {
   
   # has allow_number_object : ro byte;
   
-  # has escape_slash : ro byte;
-  
   # Class Methods
   static method new : JSON ($options : object[]) {
     my $self = new JSON;

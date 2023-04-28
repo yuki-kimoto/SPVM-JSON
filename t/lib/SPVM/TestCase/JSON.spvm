@@ -627,6 +627,18 @@ class TestCase::JSON {
         return 0;
       }
     }
+    
+    # '/'
+    {
+      my $input = "/";
+      my $got = $DEFAULT_JSON->encode($input);
+      my $expected = "\"\\/\"";
+      
+      unless (&_equals($got, $expected)) {
+        return 0;
+      }
+    }
+    
     # '\'
     {
       my $input = "\\";
@@ -663,6 +675,7 @@ class TestCase::JSON {
         return 0;
       }
     }
+    
     return 1;
   }
 
