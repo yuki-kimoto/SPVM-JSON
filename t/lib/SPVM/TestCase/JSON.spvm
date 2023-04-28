@@ -717,6 +717,16 @@ class TestCase::JSON {
       }
     }
 
+    # '/'
+    {
+      my $input = "\"/\"";
+      my $got = $DEFAULT_JSON->decode($input);
+      my $expected = "/";
+      unless (&_equals($got, $expected)) {
+        return 0;
+      }
+    }
+
     # TODO
     # '\b'
     {
