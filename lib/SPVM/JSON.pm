@@ -55,7 +55,7 @@ A L<Short|SPVM::Short> object is converted to a JSON number.
 
 A L<Int|SPVM::Int> object is converted to a JSON number.
 
-A L<Long|SPVM::Long> object is converted to a JSON number. Accuracy may be reduced.
+A L<Long|SPVM::Long> object is converted to a JSON number.
 
 A L<Float|SPVM::Float> object is converted to a JSON number.
 
