@@ -1,7 +1,7 @@
 # Copyright (c) 2023 Yuki Kimoto
 # MIT License
 
-class JSON : precompile {
+class JSON {
   use Hash;
   use List;
   use StringBuffer;
