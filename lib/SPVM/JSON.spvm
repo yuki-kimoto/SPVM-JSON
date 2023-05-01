@@ -259,7 +259,7 @@ class JSON : precompile {
   private static method _expect_char : void ($json_data : string, $json_data_index : int*, $expected : byte) {
     my $json_data_length = length $json_data;
     unless ($$json_data_index + 1 <= $json_data_length && $json_data->[$$json_data_index] == $expected) {
-      &_decode_error("Expected char: \"" . Fn->chr($expected) . "\"", $json_data, $$json_data_index);
+      &_decode_error("Expected character: \"" . Fn->chr($expected) . "\"", $json_data, $$json_data_index);
     }
     ++$$json_data_index;
   }
@@ -268,14 +268,14 @@ class JSON : precompile {
     my $json_data_length = length $json_data;
     my $length = length $expected;
     unless ($$json_data_index + $length <= $json_data_length) {
-      &_decode_error("Expected token: $expected doesn't exist", $json_data, $$json_data_index);
+      &_decode_error("Expected token: \"$expected\"", $json_data, $$json_data_index);
     }
     my $got = Fn->substr($json_data, $$json_data_index, $length);
     if ($got eq $expected) {
       $$json_data_index += $length;
     }
     else {
-      &_decode_error("Expected token: $expected doesn't exist", $json_data, $$json_data_index);
+      &_decode_error("Expected token: \"$expected\"", $json_data, $$json_data_index);
     }
   }
   
