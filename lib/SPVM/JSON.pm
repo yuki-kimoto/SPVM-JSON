@@ -1,6 +1,6 @@
 package SPVM::JSON;
 
-our $VERSION = '0.04';
+our $VERSION = "0.051";
 
 1;
 

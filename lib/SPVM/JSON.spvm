@@ -2,6 +2,8 @@
 # MIT License
 
 class JSON : precompile {
+  version "0.051";
+  
   use Hash;
   use List;
   use StringBuffer;

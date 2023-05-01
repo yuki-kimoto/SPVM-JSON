@@ -1,4 +1,4 @@
-0.05 2023-04-28
+0.051 2023-04-28
   [New Features]
     * The new method in the JSON class receive options
     * Added the canonical option of the new method in the JSON class.
