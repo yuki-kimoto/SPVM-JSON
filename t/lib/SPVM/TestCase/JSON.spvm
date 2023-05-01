@@ -851,7 +851,7 @@ class TestCase::JSON {
         eval {
           $json->decode("\"" . (string)[(byte)$ch] . "\"");
         };
-        unless ($@ && Fn->index($@, "Control ASCII characters are not allowed in string", 0) >= 0) {
+        unless ($@ && Fn->index($@, "Invalid string", 0) >= 0) {
           $@ = undef;
           return 0;
         }
@@ -860,7 +860,7 @@ class TestCase::JSON {
       eval {
         $json->decode("\"" . (string)[(byte)127 ] . "\"");
       };
-      unless ($@ && Fn->index($@, "Control ASCII characters are not allowed in string", 0) >= 0) {
+      unless ($@ && Fn->index($@, "Invalid string", 0) >= 0) {
         $@ = undef;
         return 0;
       }

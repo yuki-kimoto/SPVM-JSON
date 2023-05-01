@@ -320,7 +320,7 @@ class JSON : precompile {
             break;
           }
           default: {
-            &_decode_error("Undefined special char", $json_data, $$json_data_index);
+            &_decode_error("Invalid string", $json_data, $$json_data_index);
           }
         }
         $special_char_expected = 0;
@@ -330,14 +330,14 @@ class JSON : precompile {
       }
       else {
         if ($char <= 31 || $char == 127) {
-          &_decode_error("Control ASCII characters are not allowed in string", $json_data, $$json_data_index);
+          &_decode_error("Invalid string", $json_data, $$json_data_index);
         }
         $buffer->push_char($char);
       }
       ++$$json_data_index;
     }
     if ($$json_data_index == $json_data_length) {
-      &_decode_error("Invalid string. end-quote doesn't exist", $json_data, $$json_data_index);
+      &_decode_error("Invalid string", $json_data, $$json_data_index);
     }
 
     &_expect_char($json_data, $json_data_index, '\"');
