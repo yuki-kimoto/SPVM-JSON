@@ -550,7 +550,7 @@ class TestCase::JSON {
       eval {
         $json->decode("-");
       };
-      unless ($@ && Fn->index($@, "malformed number (no digit after '-')", 0) >= 0) {
+      unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
         $@ = undef;
         return 0;
       }
@@ -563,7 +563,7 @@ class TestCase::JSON {
         eval {
           $json->decode($input);
         };
-        unless ($@ && Fn->index($@, "malformed number (improper position of '.')", 0) >= 0) {
+        unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
           $@ = undef;
           return 0;
         }
@@ -577,7 +577,7 @@ class TestCase::JSON {
         eval {
           $json->decode($input);
         };
-        unless ($@ && Fn->index($@, "malformed number (improper position of 'e')", 0) >= 0) {
+        unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
           $@ = undef;
           return 0;
         }
@@ -591,7 +591,7 @@ class TestCase::JSON {
         eval {
           $json->decode($input);
         };
-        unless ($@ && Fn->index($@, "malformed number (no digit after '.')", 0) >= 0) {
+        unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
           $@ = undef;
           return 0;
         }
@@ -605,7 +605,7 @@ class TestCase::JSON {
         eval {
           $json->decode($input);
         };
-        unless ($@ && Fn->index($@, "malformed number (no digit after 'e')", 0) >= 0) {
+        unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
           $@ = undef;
           return 0;
         }
@@ -619,7 +619,7 @@ class TestCase::JSON {
         eval {
           $json->decode($input);
         };
-        unless ($@ && Fn->index($@, "malformed number (no digit after exponential sign)", 0) >= 0) {
+        unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
           $@ = undef;
           return 0;
         }

@@ -355,12 +355,12 @@ class JSON : precompile {
 
     if ($json_data->[$$json_data_index] == '-') {
       unless ($$json_data_index + 1 < $json_data_length && Fn->is_digit($json_data->[$$json_data_index + 1])) {
-        &_decode_error("malformed number (no digit after '-')", $json_data, $$json_data_index);
+        &_decode_error("Invalid number", $json_data, $$json_data_index);
       }
       $$json_data_index += 2;
     }
     elsif (!Fn->is_digit($json_data->[$$json_data_index])) {
-      die "[BUG] first character must be digit or '-'";
+      die "Invalid number";
     }
 
     $state = &DECODE_NUM_LEADING_DIGIT();
@@ -371,7 +371,7 @@ class JSON : precompile {
       switch($ch) {
         case '.': {
           unless ($state == &DECODE_NUM_LEADING_DIGIT()) {
-            &_decode_error("malformed number (improper position of '.')", $json_data, $$json_data_index);
+            &_decode_error("Invalid number", $json_data, $$json_data_index);
           }
           $state = &DECODE_NUM_DOT();
           break;
@@ -382,7 +382,7 @@ class JSON : precompile {
             case &DECODE_NUM_EXP():
             case &DECODE_NUM_EXP_SIGN():
             case &DECODE_NUM_EXP_DIGIT(): {
-              &_decode_error("malformed number (improper position of 'e')", $json_data, $$json_data_index);
+              &_decode_error("Invalid number", $json_data, $$json_data_index);
               break;
             }
             default: {
@@ -395,7 +395,7 @@ class JSON : precompile {
           switch ($state) {
             case &DECODE_NUM_DOT(): {
               unless (Fn->is_digit($ch)) {
-                &_decode_error("malformed number (no digit after '.')", $json_data, $$json_data_index);
+                &_decode_error("Invalid number", $json_data, $$json_data_index);
               }
               $state = &DECODE_NUM_FRAC();
               break;
@@ -408,13 +408,13 @@ class JSON : precompile {
                 $state = &DECODE_NUM_EXP_DIGIT();
               }
               else {
-                &_decode_error("malformed number (no digit after 'e')", $json_data, $$json_data_index);
+                &_decode_error("Invalid number", $json_data, $$json_data_index);
               }
               break;
             }
             case &DECODE_NUM_EXP_SIGN(): {
               unless (Fn->is_digit($ch)) {
-                &_decode_error("malformed number (no digit after exponential sign)", $json_data, $$json_data_index);
+                &_decode_error("Invalid number", $json_data, $$json_data_index);
               }
               $state = &DECODE_NUM_EXP_DIGIT();
               break;
@@ -440,7 +440,7 @@ class JSON : precompile {
         unless ($state == &DECODE_NUM_LEADING_DIGIT() ||
                 $state == &DECODE_NUM_FRAC() ||
                 $state == &DECODE_NUM_EXP_DIGIT()) {
-          &_decode_error("malformed number (end of string)", $json_data, $$json_data_index);
+          &_decode_error("Invalid number", $json_data, $$json_data_index);
         }
         $state = &DECODE_NUM_END();
       }
