@@ -20,10 +20,10 @@ The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.
   my $json = JSON->new;
   
   # decode
-  my $spvm_data = $json->decode($json_text);
+  my $spvm_data = $json->decode($json_data);
   
   # encode
-  my $json_text = $json->encode($spvm_data);
+  my $json_data = $json->encode($spvm_data);
 
 =head1 Class Methods
 
@@ -70,9 +70,9 @@ Exceptions:
 
 =head2 decode
 
-  method decode : object ($json : string);
+  method decode : object ($json_data : string);
 
-Converts the JSON data $json to a SPVM data.
+Converts the JSON data $json_data to a SPVM data.
 
 A JSON C<null> is converted to a SPVM C<undef>.
 
