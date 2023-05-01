@@ -65,6 +65,9 @@ A L<List|SPVM::List> object is converted to a JSON array.
 
 A L<Hash|SPVM::Hash> object is converted to a JSON object. The keys are sorted by dictionaly order asc.
 
+Exceptions:
+
+
 =head2 decode
 
   method decode : object ($json : string);

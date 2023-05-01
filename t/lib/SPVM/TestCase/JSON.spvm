@@ -482,8 +482,8 @@ class TestCase::JSON {
       # Float - Infinity
       {
         my $input = Math->INFINITYF;
-        eval { $json->encode($input); };
-        unless (Fn->contains($@, "A float value must be not inifinity")) {
+        eval { $json->encode($input); }
+        unless (Fn->contains($@, "The \$spvm_data cannot contain an inifinity float value. The found depth is 0.")) {
           return 0;
         }
       }
@@ -491,8 +491,8 @@ class TestCase::JSON {
       # Float - NaN
       {
         my $input = Math->NANF;
-        eval { $json->encode($input); };
-        unless (Fn->contains($@, "A float value must be not NaN")) {
+        eval { $json->encode($input); }
+        unless (Fn->contains($@, "The \$spvm_data cannot contain a NaN float value. The found depth is 0.")) {
           return 0;
         }
       }
@@ -500,8 +500,8 @@ class TestCase::JSON {
       # Double - Infinity
       {
         my $input = Math->INFINITY;
-        eval { $json->encode($input); };
-        unless (Fn->contains($@, "A double value must be not inifinity")) {
+        eval { $json->encode($input); }
+        unless (Fn->contains($@, "The \$spvm_data cannot contain an inifinity double value. The found depth is 0.")) {
           return 0;
         }
       }
@@ -509,8 +509,8 @@ class TestCase::JSON {
       # Double - NaN
       {
         my $input = Math->NAN;
-        eval { $json->encode($input); };
-        unless (Fn->contains($@, "A double value must be not NaN")) {
+        eval { $json->encode($input); }
+        unless (Fn->contains($@, "The \$spvm_data cannot contain a NaN double value. The found depth is 0.")) {
           return 0;
         }
       }

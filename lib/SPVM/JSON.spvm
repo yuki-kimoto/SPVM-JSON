@@ -82,7 +82,11 @@ class JSON : precompile {
   
   # Instance Methods
   method encode : string ($object : object) {
-    return $self->_encode_recursive($object, 0);
+    my $depth = 0;
+    
+    my $json_data = $self->_encode_recursive($object, $depth);
+    
+    return $json_data;
   }
   
   method decode : object ($json : string) {
@@ -534,10 +538,10 @@ class JSON : precompile {
     elsif ($spvm_data isa Float) {
       my $value = $spvm_data->(Float)->value;
       if (Math->isnanf($value)) {
-        die "A float value must be not NaN";
+        die "The \$spvm_data cannot contain a NaN float value. The found depth is $depth.";
       }
       elsif (Math->isinff($value)) {
-        die "A float value must be not inifinity";
+        die "The \$spvm_data cannot contain an inifinity float value. The found depth is $depth.";
       }
       
       $json = (string)$value;
@@ -546,10 +550,10 @@ class JSON : precompile {
     elsif ($spvm_data isa Double) {
       my $value = $spvm_data->(Double)->value;
       if (Math->isnan($value)) {
-        die "A double value must be not NaN";
+        die "The \$spvm_data cannot contain a NaN double value. The found depth is $depth.";
       }
       elsif (Math->isinf($value)) {
-        die "A double value must be not inifinity";
+        die "The \$spvm_data cannot contain an inifinity double value. The found depth is $depth.";
       }
       
       $json = (string)$value;
@@ -564,7 +568,9 @@ class JSON : precompile {
       }
     }
     else {
-      die "The \$spvm_data contains a value of an invalid type";
+      my $type_name = ref $spvm_data;
+      
+      die "The \$spvm_data contains a value of an invalid type. The type is $type_name. The found depth is $depth.";
     }
     
     return $json;
