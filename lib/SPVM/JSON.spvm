@@ -175,11 +175,11 @@ class JSON : precompile {
     $self->_skip_spaces($json_data, $json_data_index);
     
     if ($$json_data_index == $json_data_length) {
-      &_decode_error("Unexpected token \"\"", $json_data, $$json_data_index);
+      &_decode_error("Unexpected character \"\"", $json_data, $$json_data_index);
     }
     
-    my $c = (int)($json_data->[$$json_data_index]);
-    switch ($c) {
+    my $char = (int)($json_data->[$$json_data_index]);
+    switch ($char) {
       case '{': {
         # objects
         return $self->_decode_hash($json_data, $json_data_index);
@@ -206,7 +206,7 @@ class JSON : precompile {
         return undef;
       }
       default: {
-        &_decode_error("Unexpected token.", $json_data, $$json_data_index);
+        &_decode_error("Unexpected character \"" . Fn->chr($char) . "\"", $json_data, $$json_data_index);
       }
     }
   }
