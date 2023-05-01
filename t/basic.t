@@ -30,6 +30,7 @@ my $start_memory_blocks_count = SPVM::api->get_memory_blocks_count();
   ok(SPVM::TestCase::JSON->decode_json_string);
   ok(SPVM::TestCase::JSON->decode_json_list);
   ok(SPVM::TestCase::JSON->decode_json_hash);
+  ok(SPVM::TestCase::JSON->decode_json_invalid_json_data);
 }
 
 # All object is freed

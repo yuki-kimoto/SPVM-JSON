@@ -173,8 +173,9 @@ class JSON : precompile {
     my $json_data_length = length $json_data;
     
     $self->_skip_spaces($json_data, $json_data_index);
+    
     if ($$json_data_index == $json_data_length) {
-      &_decode_error("Incomplete JSON", $json_data, $$json_data_index);
+      &_decode_error("Unexpected token \"\"", $json_data, $$json_data_index);
     }
     
     my $c = (int)($json_data->[$$json_data_index]);
@@ -210,20 +211,28 @@ class JSON : precompile {
     }
   }
   
-  private static method _decode_error : void ($die_message : string, $json_data : string, $start : int) {
-    my $json_data_length = length $json_data;
-    my $max_dump_length = 10;
-    if ($max_dump_length > $json_data_length - $start) {
-      $max_dump_length = $json_data_length - $start;
+  private static method _decode_error : void ($message : string, $json_data : string, $pos : int) {
+    
+    my $json_data_from_pos = Fn->substr($json_data, 0, $pos);
+    my $lines = Fn->split("\n", $pos);
+    my $lines_length = @$lines;
+    my $last_line = (mutable string)copy $lines->[$lines_length - 1];
+    if ($last_line->[length $last_line - 1] == '\r') {
+      Fn->shorten($last_line, length $last_line - 1);
     }
-    my $hint = "";
-    if ($max_dump_length > 0) {
-      $hint = "near '" . Fn->substr($json_data, $start, $json_data_length - $start) . "'";
+    my $last_new_line_pos = Fn->rindex($json_data, "\n", $pos);
+    my $last_line_pos = 0;
+    if ($last_new_line_pos >= 0) {
+      $last_line_pos = $pos - $last_new_line_pos;
     }
     else {
-      $hint = "end of string";
+      $last_line_pos = $pos;
     }
-    die $die_message . " ... $hint";
+    my $last_line_pos_disp = $last_line_pos + 1;
+    
+    my $line = $lines_length;
+    
+    die "The decoding of the \$json_data failed. $message at line $line column $last_line_pos_disp.";
   }
   
   private method _skip_spaces : void ($json_data : string, $json_data_index : int*) {
