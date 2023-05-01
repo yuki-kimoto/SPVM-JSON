@@ -170,10 +170,10 @@ class JSON : precompile {
   }
   
   private method _decode_recursive : object ($json_data : string, $json_data_index : int*) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     
     $self->_skip_spaces($json_data, $json_data_index);
-    if ($$json_data_index == $end) {
+    if ($$json_data_index == $json_data_length) {
       &_decode_error("Incomplete JSON", $json_data, $$json_data_index);
     }
     
@@ -211,14 +211,14 @@ class JSON : precompile {
   }
   
   private static method _decode_error : void ($die_message : string, $json_data : string, $start : int) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     my $max_dump_length = 10;
-    if ($max_dump_length > $end - $start) {
-      $max_dump_length = $end - $start;
+    if ($max_dump_length > $json_data_length - $start) {
+      $max_dump_length = $json_data_length - $start;
     }
     my $hint = "";
     if ($max_dump_length > 0) {
-      $hint = "near '" . Fn->substr($json_data, $start, $end - $start) . "'";
+      $hint = "near '" . Fn->substr($json_data, $start, $json_data_length - $start) . "'";
     }
     else {
       $hint = "end of string";
@@ -227,9 +227,9 @@ class JSON : precompile {
   }
   
   private method _skip_spaces : void ($json_data : string, $json_data_index : int*) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     for (; 1 ; ++$$json_data_index) {
-      if ($$json_data_index == $end) {
+      if ($$json_data_index == $json_data_length) {
         return;
       }
       unless ($json_data->[$$json_data_index] == ' ' || $json_data->[$$json_data_index] == '\n' || $json_data->[$$json_data_index] == '\t' || $json_data->[$$json_data_index] == '\r') {
@@ -239,17 +239,17 @@ class JSON : precompile {
   }
   
   private static method _expect_char : void ($json_data : string, $json_data_index : int*, $expected : byte) {
-    my $end = length $json_data;
-    unless ($$json_data_index + 1 <= $end && $json_data->[$$json_data_index] == $expected) {
+    my $json_data_length = length $json_data;
+    unless ($$json_data_index + 1 <= $json_data_length && $json_data->[$$json_data_index] == $expected) {
       &_decode_error("Expected char: $expected] doesn't exist", $json_data, $$json_data_index);
     }
     ++$$json_data_index;
   }
   
   private static method _expect_token : void ($json_data : string, $json_data_index : int*, $expected : string) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     my $length = length $expected;
-    unless ($$json_data_index + $length <= $end) {
+    unless ($$json_data_index + $length <= $json_data_length) {
       &_decode_error("Expected token: $expected doesn't exist", $json_data, $$json_data_index);
     }
     my $got = Fn->substr($json_data, $$json_data_index, $length);
@@ -262,14 +262,14 @@ class JSON : precompile {
   }
   
   private method _decode_string : string ($json_data : string, $json_data_index : int*) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     my $buffer = StringBuffer->new;
 
     &_expect_char($json_data, $json_data_index, '"');
 
     my $special_char_expected = 0;
     while (1) {
-      if ($$json_data_index >= $end || (!$special_char_expected && $json_data->[$$json_data_index] == '"')) {
+      if ($$json_data_index >= $json_data_length || (!$special_char_expected && $json_data->[$$json_data_index] == '"')) {
         last;
       }
       my $char = $json_data->[$$json_data_index];
@@ -318,7 +318,7 @@ class JSON : precompile {
       }
       ++$$json_data_index;
     }
-    if ($$json_data_index == $end) {
+    if ($$json_data_index == $json_data_length) {
       &_decode_error("Invalid string. end-quote doesn't exist", $json_data, $$json_data_index);
     }
 
@@ -449,7 +449,7 @@ class JSON : precompile {
   }
 
   private method _decode_hash : Hash ($json_data : string, $json_data_index : int*) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     my $hash = Hash->new({});
     my $has_element = 0;
 
@@ -457,7 +457,7 @@ class JSON : precompile {
 
     while (1) {
       $self->_skip_spaces($json_data, $json_data_index);
-      if ($$json_data_index == $end) {
+      if ($$json_data_index == $json_data_length) {
         &_decode_error("Incomplete object in JSON: end of string", $json_data, $$json_data_index);
       }
 
@@ -493,7 +493,7 @@ class JSON : precompile {
   }
 
   private method _decode_list : List ($json_data : string, $json_data_index : int*) {
-    my $end = length $json_data;
+    my $json_data_length = length $json_data;
     my $list = List->new([]);
     my $has_element = 0;
 
@@ -501,7 +501,7 @@ class JSON : precompile {
 
     while (1) {
       $self->_skip_spaces($json_data, $json_data_index);
-      if ($$json_data_index == $end) {
+      if ($$json_data_index == $json_data_length) {
         &_decode_error("Incomplete array in JSON: end of string", $json_data, $$json_data_index);
       }
 
