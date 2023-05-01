@@ -476,7 +476,7 @@ class JSON : precompile {
     while (1) {
       $self->_skip_spaces($json_data, $json_data_index);
       if ($$json_data_index == $json_data_length) {
-        &_decode_error("Incomplete object in JSON: end of string", $json_data, $$json_data_index);
+        &_decode_error("Unexpected character \"\"", $json_data, $$json_data_index);
       }
 
       # end of hash
@@ -520,7 +520,7 @@ class JSON : precompile {
     while (1) {
       $self->_skip_spaces($json_data, $json_data_index);
       if ($$json_data_index == $json_data_length) {
-        &_decode_error("Incomplete array in JSON: end of string", $json_data, $$json_data_index);
+        &_decode_error("Unexpected character \"\"", $json_data, $$json_data_index);
       }
 
       # end of list

@@ -927,6 +927,23 @@ class TestCase::JSON {
       }
     }
     
+    {
+      my $input    = "[";
+      eval { $json->decode($input); }
+      
+      unless (Fn->contains($@, "Unexpected character \"\" at line 1 column 2.")) {
+        return 0;
+      }
+    }
+    
+    {
+      my $input    = "{";
+      eval { $json->decode($input); }
+      
+      unless (Fn->contains($@, "Unexpected character \"\" at line 1 column 2.")) {
+        return 0;
+      }
+    }
     $@ = undef;
     
     return 1;
