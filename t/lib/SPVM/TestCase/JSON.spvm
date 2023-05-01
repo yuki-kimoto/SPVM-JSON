@@ -514,6 +514,15 @@ class TestCase::JSON {
           return 0;
         }
       }
+
+      # Invalid Type
+      {
+        my $input = Point->new;
+        eval { $json->encode($input); }
+        unless (Fn->contains($@, "The \$spvm_data contains a value of an invalid type. The type is Point. The found depth is 0.")) {
+          return 0;
+        }
+      }
     }
     
     $@ = undef;
