@@ -67,6 +67,15 @@ A L<Hash|SPVM::Hash> object is converted to a JSON object. The keys are sorted b
 
 Exceptions:
 
+The $spvm_data cannot contain a NaN float value. If cannot, an exception is thrown.
+
+The $spvm_data cannot contain an inifinity float value. If cannot, an exception is thrown.
+
+The $spvm_data cannot contain a NaN double value. If cannot, an exception is thrown.
+
+The $spvm_data cannot contain an inifinity double value. If cannot, an exception is thrown.
+
+If the $spvm_data contains a value of an invalid type, an exception is thrown.
 
 =head2 decode
 
