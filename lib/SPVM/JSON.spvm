@@ -29,6 +29,146 @@ class JSON : precompile {
     return $self;
   }
   
+  # Instance Methods
+  method encode : string ($object : object) {
+    my $depth = 0;
+    
+    my $json_data = $self->_encode_recursive($object, $depth);
+    
+    return $json_data;
+  }
+  
+  private method _encode_recursive : string ($spvm_data : object, $depth : int) {
+    
+    my $json : string;
+    
+    # undef
+    if ($spvm_data == undef) {
+      $json = "null";
+    }
+    # Hash
+    elsif ($spvm_data isa Hash) {
+      my $buffer = StringBuffer->new;
+      $buffer->push_char('{');
+      my $hash = (Hash)$spvm_data;
+      my $keys = $hash->keys;
+      
+      # Sort keys
+      Sort->sort_string_asc($keys, 0, scalar @$keys);
+      
+      for (my $keys_index = 0; $keys_index < @$keys; ++$keys_index) {
+        if ($keys_index > 0) {
+          $buffer->push_char(',');
+        }
+        $buffer->push_char('"');
+        $buffer->push($keys->[$keys_index]);
+        $buffer->push_char('"');
+        $buffer->push_char(':');
+        my $json_part = $self->_encode_recursive($hash->get($keys->[$keys_index]), $depth + 1);
+        $buffer->push($json_part);
+      }
+      $buffer->push_char('}');
+      
+      $json = $buffer->to_string;
+    }
+    # List
+    elsif ($spvm_data isa List) {
+      my $buffer = StringBuffer->new;
+      $buffer->push_char('[');
+      
+      my $list = (List)$spvm_data;
+      my $length = $list->length;
+      for (my $list_index = 0; $list_index < $length; ++$list_index) {
+        if ($list_index > 0) {
+          $buffer->push_char(',');
+        }
+        my $json_part = $self->_encode_recursive($list->get($list_index), $depth + 1);
+        $buffer->push($json_part);
+      }
+      $buffer->push_char(']');
+      
+      $json = $buffer->to_string;
+    }
+    # string
+    elsif ($spvm_data isa string) {
+      my $escaped = &_escape_string((string)$spvm_data);
+      $json = "\"" . $escaped . "\"";
+    }
+    # Byte
+    elsif ($spvm_data isa Byte) {
+      $json = (string)$spvm_data->(Byte)->value;
+    }
+    # Short
+    elsif ($spvm_data isa Short) {
+      $json = (string)$spvm_data->(Short)->value;
+    }
+    # Int
+    elsif ($spvm_data isa Int) {
+      $json = (string)$spvm_data->(Int)->value;
+    }
+    # Long
+    elsif ($spvm_data isa Long) {
+      $json = (string)$spvm_data->(Long)->value;
+    }
+    # Float
+    elsif ($spvm_data isa Float) {
+      my $value = $spvm_data->(Float)->value;
+      if (Math->isnanf($value)) {
+        die "The \$spvm_data cannot contain a NaN float value. The found depth is $depth.";
+      }
+      elsif (Math->isinff($value)) {
+        die "The \$spvm_data cannot contain an inifinity float value. The found depth is $depth.";
+      }
+      
+      $json = (string)$value;
+    }
+    # Double
+    elsif ($spvm_data isa Double) {
+      my $value = $spvm_data->(Double)->value;
+      if (Math->isnan($value)) {
+        die "The \$spvm_data cannot contain a NaN double value. The found depth is $depth.";
+      }
+      elsif (Math->isinf($value)) {
+        die "The \$spvm_data cannot contain an inifinity double value. The found depth is $depth.";
+      }
+      
+      $json = (string)$value;
+    }
+    # Bool
+    elsif ($spvm_data isa Bool) {
+      if ($spvm_data->(Bool)) {
+        $json = "true";
+      }
+      else {
+        $json = "false";
+      }
+    }
+    else {
+      my $type_name = ref $spvm_data;
+      
+      die "The \$spvm_data contains a value of an invalid type. The type is $type_name. The found depth is $depth.";
+    }
+    
+    return $json;
+  }
+  
+  method decode : object ($json : string) {
+    my $iter = 0;
+    my $spvm_data = $self->_decode_recursive($json, \$iter);
+
+    # allow $json to have trailing spaces.
+    $self->_skip_spaces($json, \$iter);
+
+    # do not allow $json to have non-space string after a json object,
+    # something like `{"key":1} [1,2]`
+    my $length = length $json;
+    unless ($iter == $length) {
+      &_decode_error("garbage after JSON object", $json, $iter);
+    }
+    
+    return $spvm_data;
+  }
+  
   private static method _decode_error : void ($die_message : string, $json : string, $start : int) {
     my $end = length $json;
     my $max_dump_length = 10;
@@ -80,31 +220,6 @@ class JSON : precompile {
     }
   }
   
-  # Instance Methods
-  method encode : string ($object : object) {
-    my $depth = 0;
-    
-    my $json_data = $self->_encode_recursive($object, $depth);
-    
-    return $json_data;
-  }
-  
-  method decode : object ($json : string) {
-    my $iter = 0;
-    my $spvm_data = $self->_decode_recursive($json, \$iter);
-
-    # allow $json to have trailing spaces.
-    $self->_skip_spaces($json, \$iter);
-
-    # do not allow $json to have non-space string after a json object,
-    # something like `{"key":1} [1,2]`
-    my $length = length $json;
-    unless ($iter == $length) {
-      &_decode_error("garbage after JSON object", $json, $iter);
-    }
-    
-    return $spvm_data;
-  }
   private method _decode_string : string ($json : string, $iter : int*) {
     my $end = length $json;
     my $buffer = StringBuffer->new;
@@ -461,121 +576,6 @@ class JSON : precompile {
     }
     return $buffer->to_string;
   }
-
-  private method _encode_recursive : string ($spvm_data : object, $depth : int) {
-    
-    my $json : string;
-    
-    # undef
-    if ($spvm_data == undef) {
-      $json = "null";
-    }
-    # Hash
-    elsif ($spvm_data isa Hash) {
-      my $buffer = StringBuffer->new;
-      $buffer->push_char('{');
-      my $hash = (Hash)$spvm_data;
-      my $keys = $hash->keys;
-      
-      # Sort keys
-      Sort->sort_string_asc($keys, 0, scalar @$keys);
-      
-      for (my $keys_index = 0; $keys_index < @$keys; ++$keys_index) {
-        if ($keys_index > 0) {
-          $buffer->push_char(',');
-        }
-        $buffer->push_char('"');
-        $buffer->push($keys->[$keys_index]);
-        $buffer->push_char('"');
-        $buffer->push_char(':');
-        my $json_part = $self->_encode_recursive($hash->get($keys->[$keys_index]), $depth + 1);
-        $buffer->push($json_part);
-      }
-      $buffer->push_char('}');
-      
-      $json = $buffer->to_string;
-    }
-    # List
-    elsif ($spvm_data isa List) {
-      my $buffer = StringBuffer->new;
-      $buffer->push_char('[');
-      
-      my $list = (List)$spvm_data;
-      my $length = $list->length;
-      for (my $list_index = 0; $list_index < $length; ++$list_index) {
-        if ($list_index > 0) {
-          $buffer->push_char(',');
-        }
-        my $json_part = $self->_encode_recursive($list->get($list_index), $depth + 1);
-        $buffer->push($json_part);
-      }
-      $buffer->push_char(']');
-      
-      $json = $buffer->to_string;
-    }
-    # string
-    elsif ($spvm_data isa string) {
-      my $escaped = &_escape_string((string)$spvm_data);
-      $json = "\"" . $escaped . "\"";
-    }
-    # Byte
-    elsif ($spvm_data isa Byte) {
-      $json = (string)$spvm_data->(Byte)->value;
-    }
-    # Short
-    elsif ($spvm_data isa Short) {
-      $json = (string)$spvm_data->(Short)->value;
-    }
-    # Int
-    elsif ($spvm_data isa Int) {
-      $json = (string)$spvm_data->(Int)->value;
-    }
-    # Long
-    elsif ($spvm_data isa Long) {
-      $json = (string)$spvm_data->(Long)->value;
-    }
-    # Float
-    elsif ($spvm_data isa Float) {
-      my $value = $spvm_data->(Float)->value;
-      if (Math->isnanf($value)) {
-        die "The \$spvm_data cannot contain a NaN float value. The found depth is $depth.";
-      }
-      elsif (Math->isinff($value)) {
-        die "The \$spvm_data cannot contain an inifinity float value. The found depth is $depth.";
-      }
-      
-      $json = (string)$value;
-    }
-    # Double
-    elsif ($spvm_data isa Double) {
-      my $value = $spvm_data->(Double)->value;
-      if (Math->isnan($value)) {
-        die "The \$spvm_data cannot contain a NaN double value. The found depth is $depth.";
-      }
-      elsif (Math->isinf($value)) {
-        die "The \$spvm_data cannot contain an inifinity double value. The found depth is $depth.";
-      }
-      
-      $json = (string)$value;
-    }
-    # Bool
-    elsif ($spvm_data isa Bool) {
-      if ($spvm_data->(Bool)) {
-        $json = "true";
-      }
-      else {
-        $json = "false";
-      }
-    }
-    else {
-      my $type_name = ref $spvm_data;
-      
-      die "The \$spvm_data contains a value of an invalid type. The type is $type_name. The found depth is $depth.";
-    }
-    
-    return $json;
-  }
-  
 }
 
 =pod TODO
