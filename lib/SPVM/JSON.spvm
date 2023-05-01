@@ -214,16 +214,25 @@ class JSON : precompile {
   private static method _decode_error : void ($message : string, $json_data : string, $pos : int) {
     
     my $json_data_from_pos = Fn->substr($json_data, 0, $pos);
-    my $lines = Fn->split("\n", $pos);
+    
+    my $lines = (string[])undef;
+    if ($json_data eq "") {
+      $lines = [$json_data];
+    }
+    else {
+      $lines = Fn->split("\n", $json_data);
+    }
     my $lines_length = @$lines;
+    
     my $last_line = (mutable string)copy $lines->[$lines_length - 1];
-    if ($last_line->[length $last_line - 1] == '\r') {
+    if (length $last_line > 0 && $last_line->[length $last_line - 1] == '\r') {
       Fn->shorten($last_line, length $last_line - 1);
     }
-    my $last_new_line_pos = Fn->rindex($json_data, "\n", $pos);
+    my $last_new_line_pos = Fn->rindex($json_data, "\n", 0, $pos);
+    
     my $last_line_pos = 0;
     if ($last_new_line_pos >= 0) {
-      $last_line_pos = $pos - $last_new_line_pos;
+      $last_line_pos = $pos - $last_new_line_pos - 1;
     }
     else {
       $last_line_pos = $pos;
@@ -250,7 +259,7 @@ class JSON : precompile {
   private static method _expect_char : void ($json_data : string, $json_data_index : int*, $expected : byte) {
     my $json_data_length = length $json_data;
     unless ($$json_data_index + 1 <= $json_data_length && $json_data->[$$json_data_index] == $expected) {
-      &_decode_error("Expected char: $expected] doesn't exist", $json_data, $$json_data_index);
+      &_decode_error("Expected char: \"" . Fn->chr($expected) . "\"", $json_data, $$json_data_index);
     }
     ++$$json_data_index;
   }

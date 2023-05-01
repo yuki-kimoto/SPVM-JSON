@@ -909,6 +909,24 @@ class TestCase::JSON {
       }
     }
     
+    {
+      my $input    = " ppp";
+      eval { $json->decode($input); }
+      
+      unless (Fn->contains($@, "The decoding of the \$json_data failed. Unexpected character \"p\" at line 1 column 2.")) {
+        return 0;
+      }
+    }
+    
+    {
+      my $input    = "\n[ppp]";
+      eval { $json->decode($input); }
+      
+      unless (Fn->contains($@, "The decoding of the \$json_data failed. Unexpected character \"p\" at line 2 column 2.")) {
+        return 0;
+      }
+    }
+    
     $@ = undef;
     
     return 1;
