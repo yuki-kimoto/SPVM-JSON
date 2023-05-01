@@ -169,6 +169,47 @@ class JSON : precompile {
     return $spvm_data;
   }
   
+  private method _decode_recursive : object ($json_data : string, $json_data_index : int*) {
+    my $end = length $json_data;
+    
+    $self->_skip_spaces($json_data, $json_data_index);
+    if ($$json_data_index == $end) {
+      &_decode_error("Incomplete JSON", $json_data, $$json_data_index);
+    }
+    
+    my $c = (int)($json_data->[$$json_data_index]);
+    switch ($c) {
+      case '{': {
+        # objects
+        return $self->_decode_hash($json_data, $json_data_index);
+      }
+      case '[': {
+        return $self->_decode_list($json_data, $json_data_index);
+      }
+      case '"': {
+        return $self->_decode_string($json_data, $json_data_index);
+      }
+      case '-':
+      case '0': case '1': case '2': case '3': case '4':
+      case '5': case '6': case '7': case '8': case '9': {
+        return $self->_decode_num($json_data, $json_data_index);
+      }
+      case 't': {
+        return $self->_decode_true($json_data, $json_data_index);
+      }
+      case 'f': {
+        return $self->_decode_false($json_data, $json_data_index);
+      }
+      case 'n': {
+        &_expect_token($json_data, $json_data_index, "null");
+        return undef;
+      }
+      default: {
+        &_decode_error("Unexpected token.", $json_data, $$json_data_index);
+      }
+    }
+  }
+  
   private static method _decode_error : void ($die_message : string, $json_data : string, $start : int) {
     my $end = length $json_data;
     my $max_dump_length = 10;
@@ -482,47 +523,6 @@ class JSON : precompile {
     &_expect_char($json_data, $json_data_index, ']');
 
     return $list;
-  }
-
-  private method _decode_recursive : object ($json_data : string, $json_data_index : int*) {
-    my $end = length $json_data;
-
-    $self->_skip_spaces($json_data, $json_data_index);
-    if ($$json_data_index == $end) {
-      &_decode_error("Incomplete JSON", $json_data, $$json_data_index);
-    }
-
-    my $c = (int)($json_data->[$$json_data_index]);
-    switch ($c) {
-      case '{': {
-        # objects
-        return $self->_decode_hash($json_data, $json_data_index);
-      }
-      case '[': {
-        return $self->_decode_list($json_data, $json_data_index);
-      }
-      case '"': {
-        return $self->_decode_string($json_data, $json_data_index);
-      }
-      case '-':
-      case '0': case '1': case '2': case '3': case '4':
-      case '5': case '6': case '7': case '8': case '9': {
-        return $self->_decode_num($json_data, $json_data_index);
-      }
-      case 't': {
-        return $self->_decode_true($json_data, $json_data_index);
-      }
-      case 'f': {
-        return $self->_decode_false($json_data, $json_data_index);
-      }
-      case 'n': {
-        &_expect_token($json_data, $json_data_index, "null");
-        return undef;
-      }
-      default: {
-        &_decode_error("Unexpected token.", $json_data, $$json_data_index);
-      }
-    }
   }
 
   private static method _escape_string : string ($string : string) {
