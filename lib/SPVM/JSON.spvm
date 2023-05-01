@@ -153,17 +153,17 @@ class JSON : precompile {
   }
   
   method decode : object ($json_data : string) {
-    my $iter = 0;
-    my $spvm_data = $self->_decode_recursive($json_data, \$iter);
-
+    my $json_data_index = 0;
+    my $spvm_data = $self->_decode_recursive($json_data, \$json_data_index);
+    
     # allow $json_data to have trailing spaces.
-    $self->_skip_spaces($json_data, \$iter);
-
+    $self->_skip_spaces($json_data, \$json_data_index);
+    
     # do not allow $json_data to have non-space string after a json object,
     # something like `{"key":1} [1,2]`
     my $length = length $json_data;
-    unless ($iter == $length) {
-      &_decode_error("garbage after JSON object", $json_data, $iter);
+    unless ($json_data_index == $length) {
+      &_decode_error("The \$json_data can't end with non-space characters", $json_data, $json_data_index);
     }
     
     return $spvm_data;
@@ -185,53 +185,53 @@ class JSON : precompile {
     die $die_message . " ... $hint";
   }
   
-  private method _skip_spaces : void ($json_data : string, $iter : int*) {
+  private method _skip_spaces : void ($json_data : string, $json_data_index : int*) {
     my $end = length $json_data;
-    for (; 1 ; ++$$iter) {
-      if ($$iter == $end) {
+    for (; 1 ; ++$$json_data_index) {
+      if ($$json_data_index == $end) {
         return;
       }
-      unless ($json_data->[$$iter] == ' ' || $json_data->[$$iter] == '\n' || $json_data->[$$iter] == '\t' || $json_data->[$$iter] == '\r') {
+      unless ($json_data->[$$json_data_index] == ' ' || $json_data->[$$json_data_index] == '\n' || $json_data->[$$json_data_index] == '\t' || $json_data->[$$json_data_index] == '\r') {
         last;
       }
     }
   }
   
-  private static method _expect_char : void ($json_data : string, $iter : int*, $expected : byte) {
+  private static method _expect_char : void ($json_data : string, $json_data_index : int*, $expected : byte) {
     my $end = length $json_data;
-    unless ($$iter + 1 <= $end && $json_data->[$$iter] == $expected) {
-      &_decode_error("Expected char: $expected] doesn't exist", $json_data, $$iter);
+    unless ($$json_data_index + 1 <= $end && $json_data->[$$json_data_index] == $expected) {
+      &_decode_error("Expected char: $expected] doesn't exist", $json_data, $$json_data_index);
     }
-    ++$$iter;
+    ++$$json_data_index;
   }
   
-  private static method _expect_token : void ($json_data : string, $iter : int*, $expected : string) {
+  private static method _expect_token : void ($json_data : string, $json_data_index : int*, $expected : string) {
     my $end = length $json_data;
     my $length = length $expected;
-    unless ($$iter + $length <= $end) {
-      &_decode_error("Expected token: $expected doesn't exist", $json_data, $$iter);
+    unless ($$json_data_index + $length <= $end) {
+      &_decode_error("Expected token: $expected doesn't exist", $json_data, $$json_data_index);
     }
-    my $got = Fn->substr($json_data, $$iter, $length);
+    my $got = Fn->substr($json_data, $$json_data_index, $length);
     if ($got eq $expected) {
-      $$iter += $length;
+      $$json_data_index += $length;
     }
     else {
-      &_decode_error("Expected token: $expected doesn't exist", $json_data, $$iter);
+      &_decode_error("Expected token: $expected doesn't exist", $json_data, $$json_data_index);
     }
   }
   
-  private method _decode_string : string ($json_data : string, $iter : int*) {
+  private method _decode_string : string ($json_data : string, $json_data_index : int*) {
     my $end = length $json_data;
     my $buffer = StringBuffer->new;
 
-    &_expect_char($json_data, $iter, '"');
+    &_expect_char($json_data, $json_data_index, '"');
 
     my $special_char_expected = 0;
     while (1) {
-      if ($$iter >= $end || (!$special_char_expected && $json_data->[$$iter] == '"')) {
+      if ($$json_data_index >= $end || (!$special_char_expected && $json_data->[$$json_data_index] == '"')) {
         last;
       }
-      my $char = $json_data->[$$iter];
+      my $char = $json_data->[$$json_data_index];
       if ($special_char_expected) {
         switch ((int)$char) {
           case '"':
@@ -261,7 +261,7 @@ class JSON : precompile {
             break;
           }
           default: {
-            &_decode_error("Undefined special char", $json_data, $$iter);
+            &_decode_error("Undefined special char", $json_data, $$json_data_index);
           }
         }
         $special_char_expected = 0;
@@ -271,48 +271,48 @@ class JSON : precompile {
       }
       else {
         if ($char <= 31 || $char == 127) {
-          &_decode_error("Control ASCII characters are not allowed in string", $json_data, $$iter);
+          &_decode_error("Control ASCII characters are not allowed in string", $json_data, $$json_data_index);
         }
         $buffer->push_char($char);
       }
-      ++$$iter;
+      ++$$json_data_index;
     }
-    if ($$iter == $end) {
-      &_decode_error("Invalid string. end-quote doesn't exist", $json_data, $$iter);
+    if ($$json_data_index == $end) {
+      &_decode_error("Invalid string. end-quote doesn't exist", $json_data, $$json_data_index);
     }
 
-    &_expect_char($json_data, $iter, '\"');
+    &_expect_char($json_data, $json_data_index, '\"');
 
     return (string)$buffer->to_string;
   }
 
-  private method _decode_num : object ($json_data : string, $iter : int*) {
+  private method _decode_num : object ($json_data : string, $json_data_index : int*) {
     my $json_data_length = length $json_data;
 
-    my $iter_decode_begin = $$iter;
+    my $json_data_index_decode_begin = $$json_data_index;
 
     # validate number
     my $state = &DECODE_NUM_BEGIN();
 
-    if ($json_data->[$$iter] == '-') {
-      unless ($$iter + 1 < $json_data_length && Fn->is_digit($json_data->[$$iter + 1])) {
-        &_decode_error("malformed number (no digit after '-')", $json_data, $$iter);
+    if ($json_data->[$$json_data_index] == '-') {
+      unless ($$json_data_index + 1 < $json_data_length && Fn->is_digit($json_data->[$$json_data_index + 1])) {
+        &_decode_error("malformed number (no digit after '-')", $json_data, $$json_data_index);
       }
-      $$iter += 2;
+      $$json_data_index += 2;
     }
-    elsif (!Fn->is_digit($json_data->[$$iter])) {
+    elsif (!Fn->is_digit($json_data->[$$json_data_index])) {
       die "[BUG] first character must be digit or '-'";
     }
 
     $state = &DECODE_NUM_LEADING_DIGIT();
 
     while ($state != &DECODE_NUM_END()) {
-      my $ch = (int) $json_data->[$$iter];
+      my $ch = (int) $json_data->[$$json_data_index];
 
       switch($ch) {
         case '.': {
           unless ($state == &DECODE_NUM_LEADING_DIGIT()) {
-            &_decode_error("malformed number (improper position of '.')", $json_data, $$iter);
+            &_decode_error("malformed number (improper position of '.')", $json_data, $$json_data_index);
           }
           $state = &DECODE_NUM_DOT();
           break;
@@ -323,7 +323,7 @@ class JSON : precompile {
             case &DECODE_NUM_EXP():
             case &DECODE_NUM_EXP_SIGN():
             case &DECODE_NUM_EXP_DIGIT(): {
-              &_decode_error("malformed number (improper position of 'e')", $json_data, $$iter);
+              &_decode_error("malformed number (improper position of 'e')", $json_data, $$json_data_index);
               break;
             }
             default: {
@@ -336,7 +336,7 @@ class JSON : precompile {
           switch ($state) {
             case &DECODE_NUM_DOT(): {
               unless (Fn->is_digit($ch)) {
-                &_decode_error("malformed number (no digit after '.')", $json_data, $$iter);
+                &_decode_error("malformed number (no digit after '.')", $json_data, $$json_data_index);
               }
               $state = &DECODE_NUM_FRAC();
               break;
@@ -349,13 +349,13 @@ class JSON : precompile {
                 $state = &DECODE_NUM_EXP_DIGIT();
               }
               else {
-                &_decode_error("malformed number (no digit after 'e')", $json_data, $$iter);
+                &_decode_error("malformed number (no digit after 'e')", $json_data, $$json_data_index);
               }
               break;
             }
             case &DECODE_NUM_EXP_SIGN(): {
               unless (Fn->is_digit($ch)) {
-                &_decode_error("malformed number (no digit after exponential sign)", $json_data, $$iter);
+                &_decode_error("malformed number (no digit after exponential sign)", $json_data, $$json_data_index);
               }
               $state = &DECODE_NUM_EXP_DIGIT();
               break;
@@ -375,152 +375,152 @@ class JSON : precompile {
         last;
       }
 
-      ++$$iter;
+      ++$$json_data_index;
 
-      if ($json_data_length <= $$iter) {
+      if ($json_data_length <= $$json_data_index) {
         unless ($state == &DECODE_NUM_LEADING_DIGIT() ||
                 $state == &DECODE_NUM_FRAC() ||
                 $state == &DECODE_NUM_EXP_DIGIT()) {
-          &_decode_error("malformed number (end of string)", $json_data, $$iter);
+          &_decode_error("malformed number (end of string)", $json_data, $$json_data_index);
         }
         $state = &DECODE_NUM_END();
       }
     }
 
-    my $iter_decode_end = $$iter;
+    my $json_data_index_decode_end = $$json_data_index;
 
     # decode number by Fn->to_double
-    my $decode_length = $iter_decode_end - $iter_decode_begin;
-    my $decode_string = Fn->substr($json_data, $iter_decode_begin, $decode_length);
+    my $decode_length = $json_data_index_decode_end - $json_data_index_decode_begin;
+    my $decode_string = Fn->substr($json_data, $json_data_index_decode_begin, $decode_length);
     my $result_number = Fn->to_double($decode_string);
 
     return Double->new($result_number);
   }
 
-  private method _decode_true : Bool ($json_data : string, $iter : int*) {
-    &_expect_token($json_data, $iter, "true");
+  private method _decode_true : Bool ($json_data : string, $json_data_index : int*) {
+    &_expect_token($json_data, $json_data_index, "true");
     return true;
   }
 
-  private method _decode_false : Bool ($json_data : string, $iter : int*) {
-    &_expect_token($json_data, $iter, "false");
+  private method _decode_false : Bool ($json_data : string, $json_data_index : int*) {
+    &_expect_token($json_data, $json_data_index, "false");
     return false;
   }
 
-  private method _decode_hash : Hash ($json_data : string, $iter : int*) {
+  private method _decode_hash : Hash ($json_data : string, $json_data_index : int*) {
     my $end = length $json_data;
     my $hash = Hash->new({});
     my $has_element = 0;
 
-    &_expect_char($json_data, $iter, '{');
+    &_expect_char($json_data, $json_data_index, '{');
 
     while (1) {
-      $self->_skip_spaces($json_data, $iter);
-      if ($$iter == $end) {
-        &_decode_error("Incomplete object in JSON: end of string", $json_data, $$iter);
+      $self->_skip_spaces($json_data, $json_data_index);
+      if ($$json_data_index == $end) {
+        &_decode_error("Incomplete object in JSON: end of string", $json_data, $$json_data_index);
       }
 
       # end of hash
-      if ($json_data->[$$iter] == '}') {
+      if ($json_data->[$$json_data_index] == '}') {
         last;
       }
 
       # comma
       if ($has_element) {
-        &_expect_char($json_data, $iter, ',');
-        $self->_skip_spaces($json_data, $iter);
+        &_expect_char($json_data, $json_data_index, ',');
+        $self->_skip_spaces($json_data, $json_data_index);
       }
       else {
         $has_element = 1;
       }
 
       # key
-      my $key = $self->_decode_string($json_data, $iter);
+      my $key = $self->_decode_string($json_data, $json_data_index);
 
       # separator
-      $self->_skip_spaces($json_data, $iter);
-      &_expect_char($json_data, $iter, ':');
+      $self->_skip_spaces($json_data, $json_data_index);
+      &_expect_char($json_data, $json_data_index, ':');
 
       # value
-      my $value = $self->_decode_recursive($json_data, $iter);
+      my $value = $self->_decode_recursive($json_data, $json_data_index);
       $hash->set($key, $value);
     }
 
-    &_expect_char($json_data, $iter, '}');
+    &_expect_char($json_data, $json_data_index, '}');
 
     return $hash;
   }
 
-  private method _decode_list : List ($json_data : string, $iter : int*) {
+  private method _decode_list : List ($json_data : string, $json_data_index : int*) {
     my $end = length $json_data;
     my $list = List->new([]);
     my $has_element = 0;
 
-    &_expect_char($json_data, $iter, '[');
+    &_expect_char($json_data, $json_data_index, '[');
 
     while (1) {
-      $self->_skip_spaces($json_data, $iter);
-      if ($$iter == $end) {
-        &_decode_error("Incomplete array in JSON: end of string", $json_data, $$iter);
+      $self->_skip_spaces($json_data, $json_data_index);
+      if ($$json_data_index == $end) {
+        &_decode_error("Incomplete array in JSON: end of string", $json_data, $$json_data_index);
       }
 
       # end of list
-      if ($json_data->[$$iter] == ']') {
+      if ($json_data->[$$json_data_index] == ']') {
         last;
       }
 
       # comma
       if ($has_element) {
-        &_expect_char($json_data, $iter, ',');
+        &_expect_char($json_data, $json_data_index, ',');
       }
       else {
         $has_element = 1;
       }
-      $list->push($self->_decode_recursive($json_data, $iter));
+      $list->push($self->_decode_recursive($json_data, $json_data_index));
     }
 
-    &_expect_char($json_data, $iter, ']');
+    &_expect_char($json_data, $json_data_index, ']');
 
     return $list;
   }
 
-  private method _decode_recursive : object ($json_data : string, $iter : int*) {
+  private method _decode_recursive : object ($json_data : string, $json_data_index : int*) {
     my $end = length $json_data;
 
-    $self->_skip_spaces($json_data, $iter);
-    if ($$iter == $end) {
-      &_decode_error("Incomplete JSON", $json_data, $$iter);
+    $self->_skip_spaces($json_data, $json_data_index);
+    if ($$json_data_index == $end) {
+      &_decode_error("Incomplete JSON", $json_data, $$json_data_index);
     }
 
-    my $c = (int)($json_data->[$$iter]);
+    my $c = (int)($json_data->[$$json_data_index]);
     switch ($c) {
       case '{': {
         # objects
-        return $self->_decode_hash($json_data, $iter);
+        return $self->_decode_hash($json_data, $json_data_index);
       }
       case '[': {
-        return $self->_decode_list($json_data, $iter);
+        return $self->_decode_list($json_data, $json_data_index);
       }
       case '"': {
-        return $self->_decode_string($json_data, $iter);
+        return $self->_decode_string($json_data, $json_data_index);
       }
       case '-':
       case '0': case '1': case '2': case '3': case '4':
       case '5': case '6': case '7': case '8': case '9': {
-        return $self->_decode_num($json_data, $iter);
+        return $self->_decode_num($json_data, $json_data_index);
       }
       case 't': {
-        return $self->_decode_true($json_data, $iter);
+        return $self->_decode_true($json_data, $json_data_index);
       }
       case 'f': {
-        return $self->_decode_false($json_data, $iter);
+        return $self->_decode_false($json_data, $json_data_index);
       }
       case 'n': {
-        &_expect_token($json_data, $iter, "null");
+        &_expect_token($json_data, $json_data_index, "null");
         return undef;
       }
       default: {
-        &_decode_error("Unexpected token.", $json_data, $$iter);
+        &_decode_error("Unexpected token.", $json_data, $$json_data_index);
       }
     }
   }
