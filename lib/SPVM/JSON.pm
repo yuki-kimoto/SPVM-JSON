@@ -67,13 +67,13 @@ A L<Hash|SPVM::Hash> object is converted to a JSON object. The keys are sorted b
 
 Exceptions:
 
-The $spvm_data cannot contain a NaN float value. If cannot, an exception is thrown.
+The $spvm_data cannot contain a NaN float value. If so, an exception is thrown.
 
-The $spvm_data cannot contain an inifinity float value. If cannot, an exception is thrown.
+The $spvm_data cannot contain an inifinity float value. If so, an exception is thrown.
 
-The $spvm_data cannot contain a NaN double value. If cannot, an exception is thrown.
+The $spvm_data cannot contain a NaN double value. If so, an exception is thrown.
 
-The $spvm_data cannot contain an inifinity double value. If cannot, an exception is thrown.
+The $spvm_data cannot contain an inifinity double value. If so, an exception is thrown.
 
 If the $spvm_data contains a value of an invalid type, an exception is thrown.
 
@@ -96,6 +96,8 @@ A JSON number is converted to a L<Double|SPVM::Double> object. Accuracy may be r
 A JSON array is converted to a L<List|SPVM::List> object.
 
 A JSON object is converted to a L<Hash|SPVM::Hash> object.
+
+Exceptions:
 
 =head1 Repository
 
