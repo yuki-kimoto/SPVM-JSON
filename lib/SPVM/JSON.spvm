@@ -362,7 +362,7 @@ class JSON : precompile {
       $$json_data_index += 2;
     }
     elsif (!Fn->is_digit($json_data->[$$json_data_index])) {
-      die "Invalid number";
+      &_decode_error("Invalid number", $json_data, $$json_data_index);
     }
 
     $state = &DECODE_NUM_LEADING_DIGIT();

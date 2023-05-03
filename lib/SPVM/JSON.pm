@@ -99,6 +99,16 @@ A JSON object is converted to a L<Hash|SPVM::Hash> object.
 
 Exceptions:
 
+If the decoding of the $json_data failed, an exception is thrwon with one of the following messages adding the line number and the column number.
+
+Expected character: "%s". (%s is a string)
+
+Expected token: "%s". (%s is a string)
+
+Invalid string.
+
+Invalid number.
+
 =head1 Repository
 
 L<SPVM::JSON - Github|https://github.com/yuki-kimoto/SPVM-JSON>
