@@ -230,7 +230,7 @@ class JSON : precompile {
     if (length $last_line > 0 && $last_line->[length $last_line - 1] == '\r') {
       Fn->shorten($last_line, length $last_line - 1);
     }
-    my $last_new_line_pos = Fn->rindex_v2($json_data, "\n", $pos);
+    my $last_new_line_pos = Fn->rindex($json_data, "\n", $pos);
     
     my $last_line_pos = 0;
     if ($last_new_line_pos >= 0) {
