@@ -597,10 +597,3 @@ class JSON : precompile {
     return $buffer->to_string;
   }
 }
-
-=pod TODO
-
-escape_slash => default false | field
-
-=cut
-
