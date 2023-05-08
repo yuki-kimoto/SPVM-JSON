@@ -146,7 +146,7 @@ class JSON : precompile {
       }
     }
     else {
-      my $type_name = ref $spvm_data;
+      my $type_name = type_name $spvm_data;
       
       die "The \$spvm_data contains a value of an invalid type. The type is $type_name. The found depth is $depth.";
     }
