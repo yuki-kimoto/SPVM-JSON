@@ -222,7 +222,6 @@ class TestCase::JSON {
         return 0;
       }
       
-      $@ = undef;
     }
     
     return 1;
@@ -525,8 +524,6 @@ class TestCase::JSON {
       }
     }
     
-    $@ = undef;
-    
     return 1;
   }
 
@@ -551,10 +548,8 @@ class TestCase::JSON {
         $json->decode("-");
       };
       unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
-        $@ = undef;
         return 0;
       }
-      $@ = undef;
     }
     {
       my $test_case = ["1e.", "1e+.", "1.."];
@@ -564,10 +559,8 @@ class TestCase::JSON {
           $json->decode($input);
         };
         unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
-          $@ = undef;
           return 0;
         }
-        $@ = undef;
       }
     }
     {
@@ -578,10 +571,8 @@ class TestCase::JSON {
           $json->decode($input);
         };
         unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
-          $@ = undef;
           return 0;
         }
-        $@ = undef;
       }
     }
     {
@@ -592,10 +583,8 @@ class TestCase::JSON {
           $json->decode($input);
         };
         unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
-          $@ = undef;
           return 0;
         }
-        $@ = undef;
       }
     }
     {
@@ -606,10 +595,8 @@ class TestCase::JSON {
           $json->decode($input);
         };
         unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
-          $@ = undef;
           return 0;
         }
-        $@ = undef;
       }
     }
     {
@@ -620,10 +607,8 @@ class TestCase::JSON {
           $json->decode($input);
         };
         unless ($@ && Fn->index($@, "Invalid number", 0) >= 0) {
-          $@ = undef;
           return 0;
         }
-        $@ = undef;
       }
     }
     return 1;
@@ -852,19 +837,15 @@ class TestCase::JSON {
           $json->decode("\"" . (string)[(byte)$ch] . "\"");
         };
         unless ($@ && Fn->index($@, "Invalid string", 0) >= 0) {
-          $@ = undef;
           return 0;
         }
-        $@ = undef;
       }
       eval {
         $json->decode("\"" . (string)[(byte)127 ] . "\"");
       };
       unless ($@ && Fn->index($@, "Invalid string", 0) >= 0) {
-        $@ = undef;
         return 0;
       }
-      $@ = undef;
     }
 
     return 1;
@@ -963,8 +944,6 @@ class TestCase::JSON {
       }
     }
 
-    $@ = undef;
-    
     return 1;
   }
 }

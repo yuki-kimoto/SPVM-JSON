@@ -10,7 +10,7 @@ SPVM::JSON - JSON
 
 =head1 Description
 
-The JSON class of L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.org/wiki/JSON>.
+JSON class in L<SPVM> has methods to manipulate L<JSON|https://en.wikipedia.org/wiki/JSON>.
 
 =head1 Usage
 
