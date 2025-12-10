@@ -512,7 +512,7 @@ class JSON : precompile {
     return $hash;
   }
 
-  private method _decode_list : List ($json_data : string, $json_data_index : int*) {
+  private method _decode_list : object[] ($json_data : string, $json_data_index : int*) {
     my $json_data_length = length $json_data;
     my $list = List->new([]);
     my $has_element = 0;
@@ -542,7 +542,7 @@ class JSON : precompile {
 
     &_expect_char($json_data, $json_data_index, ']');
 
-    return $list;
+    return $list->get_array;
   }
 
   private static method _escape_string : string ($string : string) {

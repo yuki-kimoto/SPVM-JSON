@@ -43,21 +43,21 @@ class TestCase::JSON {
         }
       }
     }
-    elsif ($lhs isa List) {
-      unless ($rhs isa List) {
+    elsif ($lhs isa object[]) {
+      unless ($rhs isa object[]) {
         return 0;
       }
 
-      my $l_list = (List)$lhs;
-      my $r_list = (List)$rhs;
+      my $l_list = (object[])$lhs;
+      my $r_list = (object[])$rhs;
 
-      unless ($l_list->length == $r_list->length) {
+      unless (@$l_list == @$r_list) {
         return 0;
       }
 
-      my $length = $l_list->length;
+      my $length = @$l_list;
       for (my $list_index = 0; $list_index < $length; ++$list_index) {
-        unless (&_equals($l_list->get($list_index), $r_list->get($list_index))) {
+        unless (&_equals($l_list->[$list_index], $r_list->[$list_index])) {
           return 0;
         }
       }
@@ -378,7 +378,7 @@ class TestCase::JSON {
     {
       my $input    = "[]";
       my $got      = $json->decode($input);
-      my $expected = List->new([]);
+      my $expected = new object[0];
       unless (&_equals($got, $expected)) {
         return 0;
       }
@@ -386,7 +386,7 @@ class TestCase::JSON {
     {
       my $input    = "[3,2,1]";
       my $got      = $json->decode($input);
-      my $expected = List->new([(object) 3.0, 2.0, 1.0]);
+      my $expected = [(object) 3.0, 2.0, 1.0];
       unless (&_equals($got, $expected)) {
         return 0;
       }
@@ -394,7 +394,7 @@ class TestCase::JSON {
     {
       my $input    = "[\"def\",\"abc\"]";
       my $got      = $json->decode($input);
-      my $expected = List->new([(object) "def", "abc"]);
+      my $expected = [(object) "def", "abc"];
       unless (&_equals($got, $expected)) {
         return 0;
       }
@@ -402,7 +402,7 @@ class TestCase::JSON {
     {
       my $input    = "[0,3.14,\"abc\",true]";
       my $got      = $json->decode($input);
-      my $expected = List->new([(object) 0.0, 3.14, "abc", true]);
+      my $expected = [(object) 0.0, 3.14, "abc", true];
       unless (&_equals($got, $expected)) {
         return 0;
       }
@@ -410,7 +410,7 @@ class TestCase::JSON {
     {
       my $input    = " [ 3.14\n, true \t , \"a\" ] ";
       my $got      = $json->decode($input);
-      my $expected = List->new([(object) 3.14, true, "a"]);
+      my $expected = [(object) 3.14, true, "a"];
       unless (&_equals($got, $expected)) {
         return 0;
       }
