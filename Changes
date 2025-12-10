@@ -1,3 +1,9 @@
+1.003 2025-12-10
+  [Incompatible Changes]
+    * Change decoding output for JSON list from List class to object[].
+  [Changes]
+    * Allow object[] input.
+    
 1.002 2025-01-28
   [Requirement Changes]
     * Require SPVM 0.990042.

@@ -369,6 +369,15 @@ class TestCase::JSON {
         return 0;
       }
     }
+    
+    {
+      my $input    = [(object) 1, 2, 3];
+      my $got      = $json->encode($input);
+      my $expected = "[1,2,3]";
+      unless ($got eq $expected) {
+        return 0;
+      }
+    }
     return 1;
   }
 
