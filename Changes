@@ -2,7 +2,8 @@
   [Incompatible Changes]
     * Change decoding output for JSON list from List class to object[].
   [Changes]
-    * Allow object[] input.
+    * Allow options input such as {foo => 1}.
+    * Allow object[] input such as [(object)1, 2].
     
 1.002 2025-01-28
   [Requirement Changes]

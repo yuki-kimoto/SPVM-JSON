@@ -206,7 +206,15 @@ class TestCase::JSON {
       unless ($got eq $expected) {
         return 0;
       }
-      return 1;
+    }
+    
+    {
+      my $input    = {"string" => "vstr"};
+      my $got      = $json->encode($input);
+      my $expected = "{\"string\":\"vstr\"}";
+      unless ($got eq $expected) {
+        return 0;
+      }
     }
     
     return 1;

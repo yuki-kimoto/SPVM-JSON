@@ -49,7 +49,10 @@ class JSON : precompile {
       $json_data = "null";
     }
     # Hash
-    elsif ($spvm_data isa Hash) {
+    elsif ($spvm_data isa Hash || is_options $spvm_data) {
+      
+      $spvm_data = Fn->to_hash($spvm_data);
+      
       my $buffer = StringBuffer->new;
       $buffer->push_char('{');
       my $hash = (Hash)$spvm_data;
@@ -76,10 +79,7 @@ class JSON : precompile {
     # List
     elsif ($spvm_data isa List || $spvm_data isa object[]) {
       
-      if (is_options $spvm_data) {
-        die "Options are not allowed.";
-      }
-      elsif ($spvm_data isa object[]) {
+      if ($spvm_data isa object[]) {
         $spvm_data = List->new((object[])$spvm_data);
       }
       
